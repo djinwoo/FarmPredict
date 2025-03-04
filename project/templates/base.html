@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농업AI예측시스템</title>
+    <style>
+        a{
+        text-decoration: none;
+        }
+        .body-container {
+            background-color: #fff;
+            color: #111;
+            margin: 20px;
+        }
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            max-width: 1000px;
+            margin: 50px auto 0 auto;
+            background-color: #B2D8B2;
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
+        }
+        .contents{
+            font-size: 20px;
+            margin: 50px;
+            text-align: center;
+        }
+        .navbar-title {
+            font-size: 35px; /* 글자 크기 크게 */
+            font-weight: bold; /* 굵은 글씨 */
+            text-align: center; /* 가운데 정렬 */
+        }
+    </style>
+</head>
+<body class="body-container">
+    <nav class="navbar-container">
+        <div class="navbar-title">대한민국 작물 생산량 예측 서비스</div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
