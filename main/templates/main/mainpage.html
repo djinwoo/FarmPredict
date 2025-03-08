@@ -1,7 +1,88 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+<div class="search-container">
+    <label for="sido">시·도 선택 :</label>
+    <select id="sido">
+        <option value="">시·도 선택</option>
+        <!-- 특별시 및 광역시 먼저 -->
+        <option value="서울특별시">서울특별시</option>
+        <option value="광주광역시">광주광역시</option>
+        <option value="대구광역시">대구광역시</option>
+        <option value="대전광역시">대전광역시</option>
+        <option value="부산광역시">부산광역시</option>
+        <option value="세종특별자치시">세종특별자치시</option>
+        <option value="울산광역시">울산광역시</option>
+        <option value="인천광역시">인천광역시</option>
+    
+        <!-- 도(道) 단위 -->
+        <option value="강원도">강원도</option>
+        <option value="경기도">경기도</option>
+        <option value="경상남도">경상남도</option>
+        <option value="경상북도">경상북도</option>
+        <option value="전라남도">전라남도</option>
+        <option value="전라북도">전라북도</option>
+        <option value="충청남도">충청남도</option>
+        <option value="충청북도">충청북도</option>
+    
+        <!-- 특별자치도 -->
+        <option value="제주특별자치도">제주특별자치도</option>
+    </select>
+    
+    <label for="sigungu">시·군·구 선택 :</label>
+    <select id="sigungu">
+        <option value="">시·군·구 선택</option>
+    </select>
 
-    <div class="contents">지역필터링구간</div>
+    <label for="eupmyeondong">읍·면·동 선택 :</label>
+    <select id="eupmyeondong">
+        <option value="">읍·면·동 선택</option>
+    </select>
 
+    <button type="submit" class="search-button">
+        <img src="{% static 'images/Search-icon.svg' %}" alt="검색" class="search-icon">
+    </button>
+</div>
+
+<script>
+    // views.py에서 전달받은 데이터
+    const regionData = JSON.parse('{{ region_json|escapejs }}');
+    const emdData = JSON.parse('{{ emd_json|escapejs }}');  // 읍면동 데이터 추가
+    
+    // 시·도 선택시 시군구 채우기
+    document.getElementById('sido').addEventListener('change', function() {
+        const selectedSido = this.value;
+        const sigunguSelect = document.getElementById('sigungu');
+        sigunguSelect.innerHTML = '<option value="">시·군·구 선택</option>';
+    
+        if (selectedSido && regionData[selectedSido]) {
+            regionData[selectedSido].forEach(function(sigungu) {
+                const option = document.createElement('option');
+                option.value = sigungu;
+                option.textContent = sigungu;
+                sigunguSelect.appendChild(option);
+            });
+        }
+    
+        // 읍면동 초기화
+        document.getElementById('eupmyeondong').innerHTML = '<option value="">읍·면·동 선택</option>';
+    });
+    
+    // 시·군·구 선택시 읍면동 채우기
+    document.getElementById('sigungu').addEventListener('change', function() {
+        const selectedSigungu = this.value;
+        const eupmyeondongSelect = document.getElementById('eupmyeondong');
+        eupmyeondongSelect.innerHTML = '<option value="">읍·면·동 선택</option>';
+    
+        if (selectedSigungu && emdData[selectedSigungu]) {
+            emdData[selectedSigungu].forEach(function(emd) {
+                const option = document.createElement('option');
+                option.value = emd;
+                option.textContent = emd;
+                eupmyeondongSelect.appendChild(option);
+            });
+        }
+    });
+    </script>
 {% endblock %}

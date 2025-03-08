@@ -1,47 +1,34 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIFarm</title>
-    <style>
-        a{
-        text-decoration: none;
-        }
-        .body-container {
-            background-color: #fff;
-            color: #111;
-            margin: 20px;
-        }
-        .navbar-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 80%;
-            max-width: 1000px;
-            margin: 50px auto 0 auto;
-            background-color: #B2D8B2;
-            font-size: 20px;
-            padding: 10px 20px;
-            border-radius: 30px;
-        }
-        .contents{
-            font-size: 20px;
-            margin: 50px;
-            text-align: center;
-        }
-        .navbar-title {
-            font-size: 35px; /* 글자 크기 크게 */
-            font-weight: bold; /* 굵은 글씨 */
-            text-align: center; /* 가운데 정렬 */
-        }
-    </style>
+    <title>AIFarmPredict</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="body-container">
-    <nav class="navbar-container">
-        <div class="navbar-title">대한민국 작물 생산량 예측 서비스</div>
+<body>
+    <!-- 검은색 탑바 -->
+    <header class="topbar">
+        대한민국 작물 생산량 예측 시스템
+    </header>
+
+    <!-- 왼쪽 고정 사이드바 -->
+    <nav class="sidebar">
+        <ul>
+            <li class="menu-title">메인 시스템</li>
+            <li><img src="{% static 'images/Home-icon.svg' %}" width="24"><a href="#">메인페이지</a></li>
+
+            <li class="menu-title">상세 데이터</li>
+            <li><img src="{% static 'images/weather-icon.svg' %}" width="24"><a href="#">기상데이터</a></li>
+            <li><img src="{% static 'images/Temperature-icon.svg' %}" width="24"><a href="#">토양데이터</a></li>
+        </ul>
     </nav>
-    {% block content %}
-    {% endblock %}
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>

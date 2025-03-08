@@ -1,0 +1,124 @@
+/* 검은색 탑바 (헤더) */
+.topbar {
+    position: fixed; /* 화면 상단 고정 */
+    top: 0;
+    left: 0;
+    width: 100vw; /* 전체 화면 너비 */
+    height: 40px; /* 피그마 기준 높이 */
+    background: #2D2D2D;
+    color: #FFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 12px 50px;
+    padding-left: 28px;
+    /* 세로 중앙 정렬 추가 */
+    display: flex; /* flexbox 적용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1000; /* 다른 요소 위에 배치 */
+}
+
+/* 왼쪽 사이드바 (갈색 바) */
+.sidebar {
+    position: fixed; /* 왼쪽에 고정 */
+    top: 40px; /* 검은색 탑바 높이만큼 아래로 */
+    left: 0;
+    width: 180px; /* 사이드바 너비 */
+    height: calc(100vh - 40px); /* 화면 높이에서 탑바 높이 제외 */
+    background: #8C4A1D; /* 갈색 배경 */
+    padding-top: 20px;
+    padding-left: 10px;
+    z-index: 999; /* 다른 요소보다 위 */
+}
+
+/* 사이드바 메뉴 스타일 */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+.sidebar li {
+    display: flex; /* 아이콘과 텍스트를 가로로 정렬 */
+    align-items: center; /* 아이콘과 텍스트를 수직 중앙 정렬 */
+    padding: 10px 15px; /* 위아래 여백 추가 */
+}
+/* 아이콘과 텍스트 사이 간격 조정 */
+.sidebar img {
+    margin-right: 10px; /* 아이콘 오른쪽 여백 추가 */
+    vertical-align: middle; /* 수직 정렬 */
+}
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    display: inline-block;
+}
+/* 메뉴 제목 스타일 */
+.menu-title {
+    font-weight: bold;
+    color: #ccc;
+    margin-top: 30px;   
+}
+
+/* 회색 검색창 상자 스타일 */
+.search-container {
+    position: absolute; /* 또는 fixed */
+    top: 100px; /* 상단에서 50px 떨어진 위치 */
+    left: 500px; /* 왼쪽에서 20px 떨어진 위치 */
+    width: 1100px;
+    height: 55px;
+    background: #EDEDED;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    border-radius: 8px;
+}
+/* 검색창 글씨 스타일 */
+.search-container label {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* 드롭다운(선택 박스) 스타일 */
+.search-container select {
+    width: 150px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+/* 검색 버튼 스타일 */
+/* 🔍 검색 버튼 스타일 (아이콘만 보이도록 설정) */
+.search-button {
+    width: 50px; /* 버튼 크기 */
+    height: 50px;
+    border: none;
+    background: transparent; /* 배경 제거 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* 🔍 버튼 클릭 시 약간 확대 효과 */
+.search-button:active {
+    transform: scale(0.9);
+}
+
+/* 🔍 검색 아이콘 스타일 */
+.search-icon {
+    width: 50px; /* 아이콘 크기 */
+    height: 50px;
+    opacity: 0.8; /* 살짝 부드러운 느낌 */
+    transition: opacity 0.2s ease-in-out;
+}
