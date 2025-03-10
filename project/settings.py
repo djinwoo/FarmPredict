@@ -10,22 +10,23 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
+import environ
 import os
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(DEBUG=(bool, False))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# .env 파일 로드
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hw_o4d&i6ny!70vn3^h(itq2mk)(@-m+_gluf0escsw$=j3=#2'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 환경 변수 적용
+SECRET_KEY = env("SECRET_KEY")  # 👈 여기서 오류가 나면 .env 파일을 못 읽은 것
+DEBUG = env("DEBUG")  # 👈 'DUBUG' 오타 확인!
 
 ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
