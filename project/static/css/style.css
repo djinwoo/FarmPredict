@@ -1,124 +1,165 @@
 /* 검은색 탑바 (헤더) */
 .topbar {
-    position: fixed; /* 화면 상단 고정 */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* 전체 화면 너비 */
-    height: 40px; /* 피그마 기준 높이 */
+    width: 100vw;
+    height: 50px; /* 노트북 대응 위해 약간 증가 */
     background: #2D2D2D;
     color: #FFF;
     font-family: 'Inter', sans-serif;
-    font-size: 26px;
-    font-style: normal;
+    font-size: 22px; /* 반응형 조정 */
     font-weight: 700;
-    line-height: normal;
-    padding: 12px 50px;
     padding-left: 28px;
-    /* 세로 중앙 정렬 추가 */
-    display: flex; /* flexbox 적용 */
-    align-items: center; /* 세로 중앙 정렬 */
-    z-index: 1000; /* 다른 요소 위에 배치 */
+    display: flex;
+    align-items: center;
+    z-index: 1000;
 }
 
-/* 왼쪽 사이드바 (갈색 바) */
+/* 반응형 탑바 */
+@media (max-width: 1024px) {
+    .topbar {
+        font-size: 18px; /* 노트북에서 자동 조정 */
+        height: 45px;
+    }
+}
+
+/* 왼쪽 사이드바 */
 .sidebar {
-    position: fixed; /* 왼쪽에 고정 */
-    top: 40px; /* 검은색 탑바 높이만큼 아래로 */
+    position: fixed;
+    top: 50px;
     left: 0;
-    width: 180px; /* 사이드바 너비 */
-    height: calc(100vh - 40px); /* 화면 높이에서 탑바 높이 제외 */
-    background: #8C4A1D; /* 갈색 배경 */
+    width: 180px;
+    height: calc(100vh - 50px);
+    background: #8C4A1D;
     padding-top: 20px;
     padding-left: 10px;
-    z-index: 999; /* 다른 요소보다 위 */
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 사이드바 메뉴 스타일 */
+/* 사이드바 메뉴 */
 .sidebar ul {
     list-style: none;
     padding: 0;
-    margin-top: 30px;
+    margin: 0;
 }
 
 .sidebar li {
-    display: flex; /* 아이콘과 텍스트를 가로로 정렬 */
-    align-items: center; /* 아이콘과 텍스트를 수직 중앙 정렬 */
-    padding: 10px 15px; /* 위아래 여백 추가 */
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
 }
-/* 아이콘과 텍스트 사이 간격 조정 */
+
+/* 아이콘과 텍스트 사이 간격 */
 .sidebar img {
-    margin-right: 10px; /* 아이콘 오른쪽 여백 추가 */
-    vertical-align: middle; /* 수직 정렬 */
+    margin-right: 8px;
 }
+
+/* 사이드바 글씨 스타일 */
 .sidebar a {
     color: white;
     text-decoration: none;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 16px;
-    display: inline-block;
-}
-/* 메뉴 제목 스타일 */
-.menu-title {
-    font-weight: bold;
-    color: #ccc;
-    margin-top: 30px;   
 }
 
-/* 회색 검색창 상자 스타일 */
+/* 메뉴 제목 */
+.menu-title {
+    font-weight: bold;
+    color: #E5E5E5; /* 가독성 높은 연한 회색 */
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+/* 반응형 사이드바 */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 160px; /* 노트북에서 너비 조정 */
+    }
+}
+
+/* 메인 컨테이너 (흰색 배경) */
+/* 🌟 메인 컨테이너 (흰색 배경) */
+.container {
+    max-width: 1200px; /* 최대 너비 */
+    width: calc(100% - 200px); /* 왼쪽 사이드바 제외한 너비 */
+    background: #FFF; /* 흰색 배경 */
+    margin: 20px auto; /* 중앙 정렬 */
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 50px; /* 검은색 상단바 아래로 배치 */
+    left: 180px; /* 사이드바와 겹치지 않도록 설정 */
+}
+
+
+/* 회색 검색창 상자 */
 .search-container {
-    position: absolute; /* 또는 fixed */
-    top: 100px; /* 상단에서 50px 떨어진 위치 */
-    left: 500px; /* 왼쪽에서 20px 떨어진 위치 */
-    width: 1100px;
+    width: 100%;
+    max-width: 1100px;
     height: 55px;
     background: #EDEDED;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 28px;
+    justify-content: space-between;
+    gap: 16px;
     border-radius: 8px;
-}
-/* 검색창 글씨 스타일 */
-.search-container label {
-    font-size: 18px;
-    font-weight: 500;
-    color: #333;
+    padding: 10px 20px;
 }
 
-/* 드롭다운(선택 박스) 스타일 */
-.search-container select {
-    width: 150px;
-    height: 35px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 16px;
-}
-
-/* 검색 버튼 스타일 */
-/* 🔍 검색 버튼 스타일 (아이콘만 보이도록 설정) */
-.search-button {
-    width: 50px; /* 버튼 크기 */
-    height: 50px;
-    border: none;
-    background: transparent; /* 배경 제거 */
+/* 📊 데이터 & 지도 컨테이너 */
+.content-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+    justify-content: space-between; /* 요소들 간격 유지 */
+    gap: 30px;
+    margin-top: 30px;
 }
 
-/* 🔍 버튼 클릭 시 약간 확대 효과 */
-.search-button:active {
-    transform: scale(0.9);
+/* 🌦️ 기상 데이터 + 🟤 토양 데이터 */
+.data-container {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* 🔍 검색 아이콘 스타일 */
-.search-icon {
-    width: 50px; /* 아이콘 크기 */
-    height: 50px;
-    opacity: 0.8; /* 살짝 부드러운 느낌 */
-    transition: opacity 0.2s ease-in-out;
+.weather-box, .soil-box {
+    background: #F9F6F2;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 🟦 파란색 기상데이터 제목 */
+.box-title.blue {
+    background: #7DB9E8;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* 🟫 갈색 토양데이터 제목 */
+.box-title.brown {
+    background: #B57D4F;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* 🗺️ 지도 컨테이너 */
+.map-container {
+    width: 55%;
+    height: 450px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

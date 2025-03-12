@@ -45,6 +45,48 @@
     </button>
 </div>
 
+<!-- 📊 데이터 & 지도 컨테이너 -->
+<div class="content-container">
+    <!-- 🌦️ 데이터 박스 -->
+    <div class="data-container">
+        <div class="weather-box">
+            <h3 class="box-title blue">기상데이터</h3>
+            <ul>
+                <li>🌡️ 최저 온도: -</li>
+                <li>🌡️ 최고 온도: -</li>
+                <li>💧 습도: -</li>
+                <li>🌬️ 풍속: -</li>
+                <li>☀️ 일사량: -</li>
+                <li>🌧️ 강수량: -</li>
+            </ul>
+        </div>
+        <div class="soil-box">
+            <h3 class="box-title brown">토양데이터</h3>
+            <ul>
+                <li>🟤 토색: -</li>
+                <li><b>산도(PH)</b>: -</li>
+                <li>🌱 유기물: -</li>
+                <li>🧪 유효인산: -</li>
+                <li>🦴 칼륨: -</li>
+                <li>🦴 칼슘: -</li>
+                <li>🧂 마그네슘: -</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 🗺️ 지도 박스 -->
+    <div class="map-container">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.1738270689796!2d127.0303355156841!3d37.491723479812194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca4d548b0b25f%3A0x97c3ddc4c83065a0!2sSeoul!5e0!3m2!1sen!2skr!4v1643123123123!5m2!1sen!2skr"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy">
+        </iframe>
+    </div>
+</div>
+
 <script>
     // views.py에서 전달받은 데이터
     const regionData = JSON.parse('{{ region_json|escapejs }}');
