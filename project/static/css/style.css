@@ -1,4 +1,15 @@
 /* 검은색 탑바 (헤더) */
+body {
+    display : flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: calc(100vh - 65px);
+    padding-top: 45px;  /* 해더 높이 */
+    padding-left: 180px; /* 사이드바 넓이 */
+    
+}
+
 .topbar {
     position: fixed;
     top: 0;
@@ -16,23 +27,17 @@
     z-index: 1000;
 }
 
-/* 반응형 탑바 */
-@media (max-width: 1024px) {
-    .topbar {
-        font-size: 18px; /* 노트북에서 자동 조정 */
-        height: 45px;
-    }
-}
+
 
 /* 왼쪽 사이드바 */
 .sidebar {
     position: fixed;
-    top: 50px;
+    top: 0;
     left: 0;
+    padding-top: 65px;
     width: 180px;
-    height: calc(100vh - 50px);
+    height: 100vh;
     background: #8C4A1D;
-    padding-top: 20px;
     padding-left: 10px;
     z-index: 999;
     display: flex;
@@ -84,18 +89,16 @@
 /* 메인 컨테이너 (흰색 배경) */
 /* 🌟 메인 컨테이너 (흰색 배경) */
 .container {
-    max-width: 1200px; /* 최대 너비 */
-    width: calc(100% - 200px); /* 왼쪽 사이드바 제외한 너비 */
-    background: #FFF; /* 흰색 배경 */
-    margin: 20px auto; /* 중앙 정렬 */
-    padding: 30px;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: 50px; /* 검은색 상단바 아래로 배치 */
-    left: 180px; /* 사이드바와 겹치지 않도록 설정 */
+
+    width: 90%;
+    padding: 20px 0;
+    max-width: 1200px; /* 최대 너비 */
+    background: #FFF; /* 흰색 배경 */
+    border-radius: 10px;
 }
 
 
@@ -112,6 +115,8 @@
     border-radius: 8px;
     padding: 10px 20px;
 }
+
+
 
 /* 📊 데이터 & 지도 컨테이너 */
 .content-container {
