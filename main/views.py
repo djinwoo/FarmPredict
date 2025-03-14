@@ -1,5 +1,15 @@
-from django.shortcuts import render
+import environ
+import os
 import json
+from django.shortcuts import render
+from pathlib import Path
+
+# BASE_DIR 설정 (manage.py가 있는 Django 프로젝트 루트 경로)
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 환경 변수 로드
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
 def mainpage(request):
     region_data = {
@@ -56,6 +66,9 @@ def mainpage(request):
     context = {
         'region_json': json.dumps(region_data, ensure_ascii=False),
         'emd_json' : json.dumps(emd_data, ensure_ascii=False),
+        'kakao_api_key': env('KAKAO_API_KEY'),  # 카카오 API 키 추가
+        'latitude': 37.5665,  # 기본 위도 (서울)
+        'longitude': 126.9780  # 기본 경도 (서울)
     }
     
     return render(request, 'main/mainpage.html', context)

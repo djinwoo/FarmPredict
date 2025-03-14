@@ -24,6 +24,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # 환경 변수 적용
 SECRET_KEY = env("SECRET_KEY")  # 👈 여기서 오류가 나면 .env 파일을 못 읽은 것
 DEBUG = env("DEBUG")  # 👈 'DUBUG' 오타 확인!
+KAKAO_API_KEY = env('KAKAO_API_KEY')
 
 ALLOWED_HOSTS = ['*']
 
