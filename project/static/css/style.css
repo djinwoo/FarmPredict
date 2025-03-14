@@ -1,13 +1,12 @@
-/* 검은색 탑바 (헤더) */
 body {
-    display : flex;
+    margin: 0;
+    padding: 0;
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    height: calc(100vh - 65px);
-    padding-top: 45px;  /* 해더 높이 */
-    padding-left: 180px; /* 사이드바 넓이 */
-    
+    align-items: center;  /* ⭕ 좌측 정렬로 변경 */
+    min-height: 100vh;
+    background-color: #f5f5f5;
 }
 
 .topbar {
@@ -15,36 +14,31 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 50px; /* 노트북 대응 위해 약간 증가 */
-    background: #2D2D2D;
-    color: #FFF;
-    font-family: 'Inter', sans-serif;
-    font-size: 22px; /* 반응형 조정 */
-    font-weight: 700;
-    padding-left: 28px;
+    height: 50px;
+    background: #2d2d2d;
+    color: #fff;
+    font-size: 22px;
+    font-weight:700;
     display: flex;
     align-items: center;
+    padding-left: 28px;
     z-index: 1000;
 }
 
-
-
-/* 왼쪽 사이드바 */
 .sidebar {
     position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 65px;
+    top: 50px;
+    left: 0px;
     width: 180px;
-    height: 100vh;
-    background: #8C4A1D;
+    height: calc(100vh - 50px);
+    background-color: #8c4a1d;
+    padding-top: 10px;
     padding-left: 10px;
     z-index: 999;
     display: flex;
     flex-direction: column;
 }
 
-/* 사이드바 메뉴 */
 .sidebar ul {
     list-style: none;
     padding: 0;
@@ -57,114 +51,162 @@ body {
     padding: 10px 15px;
 }
 
-/* 아이콘과 텍스트 사이 간격 */
 .sidebar img {
-    margin-right: 8px;
+    width: 20px;
+    height: auto;
+    margin-right: 10px;
 }
 
-/* 사이드바 글씨 스타일 */
 .sidebar a {
     color: white;
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif; 
     font-weight: 500;
     font-size: 16px;
 }
 
-/* 메뉴 제목 */
 .menu-title {
-    font-weight: bold;
-    color: #E5E5E5; /* 가독성 높은 연한 회색 */
-    margin-top: 20px;
-    font-size: 15px;
+    font-weight: bold;  /* 글씨 굵게 */
+    color: #E5E5E5;  /* 연한 회색 (가독성 증가) */
+    margin-top: 20px;  /* 위쪽 간격 추가 */
+    font-size: 15px;  /* 글씨 크기 설정 */
 }
 
-/* 반응형 사이드바 */
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 160px; /* 노트북에서 너비 조정 */
-    }
-}
-
-/* 메인 컨테이너 (흰색 배경) */
-/* 🌟 메인 컨테이너 (흰색 배경) */
+/* 🌟 컨테이너 (메인 영역) */
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    position: relative;
+    justify-content: flex-start;
+    align-items: center;  /* ⭕ 컨테이너 내부 내용도 중앙 정렬 */
 
-    width: 90%;
-    padding: 20px 0;
-    max-width: 1200px; /* 최대 너비 */
-    background: #FFF; /* 흰색 배경 */
+    position: relative;
+    
+    width: calc(100vw - 180px);  /* ⭕ 사이드바 고려하여 너비 조정 */
+    min-height: calc(100vh - 50px); 
+    background: #FFF;
+    
     border-radius: 10px;
+    padding: 20px;
+
+    margin-left: 180px; /* 사이드바 공간 확보 */
+    margin-top: 50px;
+
+    box-sizing: border-box;  /* ⭕ padding 포함하여 크기 계산 */
 }
 
-
-/* 회색 검색창 상자 */
-.search-container {
+/* 🔍 검색창 (위쪽 컨테이너) */
+.top-section {
     width: 100%;
-    max-width: 1100px;
-    height: 55px;
+    max-width: 1060px;
+    height: 50px;
     background: #EDEDED;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 10px 22px;
+    margin-top: 10px;
 }
 
-
+/* 🔽 시·도 선택 라벨과 선택 상자의 간격 조절 */
+.top-section label {
+    margin-right: -30px; /* 🔽 기존보다 간격 줄이기 */
+    font-size: 18px;  /* 글씨 크기 유지 */
+}
 
 /* 📊 데이터 & 지도 컨테이너 */
-.content-container {
+.bottom-section {
+    width: 85%;  /* 🔽 기존보다 가로 폭 5% 줄이기 */
+    max-width: 1100px;  /* 🔽 최대 너비 조정 */
+    height: 600px;  /* 🔼 기존보다 세로 50px 증가 */
+    
     display: flex;
-    justify-content: space-between; /* 요소들 간격 유지 */
-    gap: 30px;
+    justify-content: space-between; /* 좌우 배치 */
+    align-items: flex-start; /* 위쪽 정렬 */
+    
+    gap: 30px; /* 두 컨테이너 사이 간격 */
     margin-top: 30px;
 }
 
-/* 🌦️ 기상 데이터 + 🟤 토양 데이터 */
-.data-container {
-    width: 45%;
+/* 🔍 검색 버튼 (돋보기 아이콘) */
+.search-button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: transparent;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out; /* 애니메이션 추가 */
 }
 
-.weather-box, .soil-box {
-    background: #F9F6F2;
+/* 🔍 버튼 위에 마우스를 올렸을 때 */
+.search-button:hover {
+    transform: scale(1.1); /* 10% 커지기 */
+}
+
+/* 🔍 버튼을 클릭했을 때 */
+.search-button:active {
+    transform: scale(0.9); /* 10% 작아졌다가 원래대로 */
+}
+
+/* 🔍 검색 아이콘 스타일 */
+.search-icon {
+    width: 30px; /* 아이콘 크기 */
+    height: 30px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* 🔍 버튼을 클릭하면 살짝 흐려지는 효과 */
+.search-button:active .search-icon {
+    opacity: 0.6;
+}
+
+/* 🔤 검색창 라벨(시·도 선택, 행정구역 선택) */
+.top-section label {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    transition: transform 0.2s ease-in-out; /* 애니메이션 추가 */
+}
+
+/* 🔽 드롭다운(선택 박스) 크기 조절 */
+.top-section select {
+    font-size: 16px;  /* 글씨 크기 키우기 */
+    width: 130px;  /* 선택 박스 너비 키우기 */
+    height: 40px;  /* 선택 박스 높이 키우기 */
+    border-radius: 8px;  /* 둥근 모서리 */
+}
+
+/* 🔤 마우스를 올렸을 때 */
+.search-button label:hover {
+    transform: scale(1.05); /* 5% 커지기 */
+}
+
+/* 🔤 클릭했을 때 */
+.search-button label:active {
+    transform: scale(0.95); /* 5% 작아졌다가 원래대로 */
+}
+
+
+/* 🌦️ 데이터 컨테이너 */
+.data-container {
+    width: 47%;  /* 🔽 기존보다 살짝 줄이기 */
+    height: 100%;  /* 🔼 `bottom-section`의 높이에 맞춤 */
+    background: #F5EFE6;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-/* 🟦 파란색 기상데이터 제목 */
-.box-title.blue {
-    background: #7DB9E8;
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-/* 🟫 갈색 토양데이터 제목 */
-.box-title.brown {
-    background: #B57D4F;
-    color: white;
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-/* 🗺️ 지도 컨테이너 */
 .map-container {
-    width: 55%;
-    height: 450px;
+    width: 47%;  /* 🔽 기존보다 살짝 줄이기 */
+    height: 100%;  /* 🔼 `bottom-section`의 높이에 맞춤 */
+    background: #F5EFE6;
+    padding: 20px;
     border-radius: 8px;
-    overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
