@@ -240,9 +240,18 @@ body {
     width: 80%;
     height: 10%;
     background-color: #b5d7f2;
-    border-radius: 8px;
-    font-size: 20px;
+    border-radius: 4px;
+    
     font-weight: bold;
+    clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+}
+
+/* 🔹 텍스트 스타일 (보조) */
+.topdata1-text {
+    font-size: 20px;
+    text-align: left; /* 🔥 텍스트 왼쪽 정렬 */
+    width: 100%; /* 🔥 부모 컨테이너의 전체 너비 사용 */
+    padding-left: 30px; /* 🔥 왼쪽 여백 추가 */
 }
 
 .topdata2-container {
@@ -252,9 +261,17 @@ body {
     width: 80%;
     height: 10%;
     background-color: #D8A25C;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 20px;
     font-weight: bold;
+    clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+}
+
+.topdata2-text {
+    font-size: 20px;
+    text-align: left; /* 🔥 텍스트 왼쪽 정렬 */
+    width: 100%; /* 🔥 부모 컨테이너의 전체 너비 사용 */
+    padding-left: 30px; /* 🔥 왼쪽 여백 추가 */
 }
 
 .bottomdata1-container {
