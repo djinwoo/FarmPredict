@@ -16,7 +16,7 @@
 2. **가상환경 활성화**
     - **Windows**:
       ```
-      source venv\Scripts\activate
+      source venv/Scripts/activate
       ```
     - **Mac/Linux**:
       ```
