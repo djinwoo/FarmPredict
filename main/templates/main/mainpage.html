@@ -48,7 +48,52 @@
 
     <!-- 📊 데이터 박스 & 지도 컨테이너 -->
     <div class="bottom-section">
-        <div class="data-container">기상 데이터 & 토양 데이터</div>
+        <div class="data-container">
+            <div class="leftdata-container">
+                <div class="topdata1-container">
+                    <p>기상 데이터</p>
+                </div>
+                <div class="bottomdata1-container">
+                    <div class="weather-row">
+                        <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
+                        <div class="weather-text">
+                            <p>최저온도 : </p>
+                            <p>최고온도 : </p>
+                        </div>
+                    </div>
+                
+                    <div class="weather-row">
+                        <img src="{% static 'images/T2-icon.svg' %}" alt="습도" class="weather-icon">
+                        <p class="weather-text">습도 :</p>
+                    </div>
+                
+                    <div class="weather-row">
+                        <img src="{% static 'images/T3-icon.svg' %}" alt="풍속" class="weather-icon">
+                        <p class="weather-text">풍속 :</p>
+                    </div>
+                
+                    <div class="weather-row">
+                        <img src="{% static 'images/T4-icon.svg' %}" alt="일사량" class="weather-icon">
+                        <p class="weather-text">일사량 :</p>
+                    </div>
+                
+                    <div class="weather-row">
+                        <img src="{% static 'images/T5-icon.svg' %}" alt="강수량" class="weather-icon">
+                        <p class="weather-text">강수량 :</p>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- 🔽 아래쪽 데이터 컨테이너 -->
+            <div class="rightdata-container">
+                <div class="topdata2-container">
+                    <p>토양 데이터</p>
+                </div>
+                <div class="bottomdata2-container">
+                    <p>토양 수분</p>
+                </div>
+            </div>
+        </div>
         <div class="map-container">
             <div id="map"></div>
         </div>
