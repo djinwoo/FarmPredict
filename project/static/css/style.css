@@ -121,7 +121,7 @@ body {
     align-items: flex-start; /* 위쪽 정렬 */
     
     gap: 30px; /* 두 컨테이너 사이 간격 */
-    margin-top: 30px;
+    margin-top: 35px;
 }
 
 /* 🔍 검색 버튼 (돋보기 아이콘) */
@@ -195,14 +195,10 @@ body {
     background: #F5EFE6;
     padding: 20px;
     border-radius: 8px;
-<<<<<<< HEAD
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-=======
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
     gap: 20px;
->>>>>>> 0fe1569fd8ce7d2a52f4b3f89c77b0783347d4cf
 }
 
 .map-container {
@@ -220,54 +216,72 @@ body {
 }
 
 /* ✅ 위쪽(top) 컨테이너 */
-.left-container {
-    width: 90%;
+.leftdata-container {
+    width: 50%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* ✅ 아래쪽(bottom) 컨테이너 */
-.right-container {
-    width: 90%;
+.rightdata-container {
+    width: 50%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .topdata1-container {
-    display: flex;  /* flexbox 사용 */
-    justify-content: center;  /* 가로 중앙 정렬 */
-    align-items: center;  /* 세로 중앙 정렬 */
-    text-align: center;  /* 텍스트 가운데 정렬 */
-    height: 10%;  /* 높이 설정 (조절 가능) */
-    background: #B5D7F2;  /* 배경색 */
-    padding: 5px;
-    border-radius: 8px;  /* 둥근 모서리 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 10%;
+    background-color: #b5d7f2;
+    border-radius: 8px;
     font-size: 20px;
     font-weight: bold;
-}
-.bottomdata1-container {
-    height: 85%;
 }
 
 .topdata2-container {
-    display: flex;  /* flexbox 사용 */
-    justify-content: center;  /* 가로 중앙 정렬 */
-    align-items: center;  /* 세로 중앙 정렬 */
-    text-align: center;  /* 텍스트 가운데 정렬 */
-    height: 10%;  /* 높이 설정 (조절 가능) */
-    background: #D8A25C;  /* 배경색 */
-    padding: 5px;
-    border-radius: 8px;  /* 둥근 모서리 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 10%;
+    background-color: #D8A25C;
+    border-radius: 8px;
     font-size: 20px;
     font-weight: bold;
 }
 
-.bottomdata2-container {
-    height: 85%;
+.bottomdata1-container {
+    display: flex;
+    flex-direction: column; /* 🔥 세로 정렬 */
+    align-items: flex-start; /* 🔥 왼쪽 정렬 */
+    justify-content: center; /* 🔥 위쪽 정렬 */
+    width: 100%; /* 부모 크기 유지 */
+    height: 100%;
 }
 
+
+.bottomdata2-container {
+    display: flex;
+    flex-direction: column; /* 🔥 세로 정렬 */
+    align-items: flex-start; /* 🔥 왼쪽 정렬 */
+    justify-content: center; /* 🔥 위쪽 정렬 */
+    width: 100%; /* 부모 크기 유지 */
+    height: 100%;
+}
 
 /* ✅ 개별 행 스타일 (아이콘 + 텍스트) */
 .weather-row {
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
     gap: 10px; /* 아이콘과 텍스트 간격 */
+    margin-bottom: 40px;
 }
 
 /* ✅ 아이콘 스타일 */
@@ -281,4 +295,21 @@ body {
     font-size: 18px; /* 글씨 크기 */
     font-weight: bold; /* 글씨 두껍게 */
     color: black; /* 글씨 색 */
+}
+
+.weather-row:last-child {
+    margin-bottom: 0;
+}
+
+.soil-text {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 36px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+.soil-text:last-child {
+    margin-bottom: 0;
 }
