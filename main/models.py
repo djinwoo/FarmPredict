@@ -8,7 +8,7 @@
 from django.db import models
 
 
-class TestData(models.Model):
+class Test(models.Model):
     year = models.IntegerField(db_column="년", primary_key=True)  # 기본키 설정 (연도를 기본키로 사용)
     month = models.IntegerField(db_column="월")
     sido = models.CharField(max_length=100, db_column="시도")
@@ -29,4 +29,4 @@ class TestData(models.Model):
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
     def __str__(self):
-        return f"{self.year}-{self.month} {self.sido} {self.sigungu}"
+        return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation} {self.latitude} {self.longitude}"

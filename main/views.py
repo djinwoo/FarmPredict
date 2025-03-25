@@ -3,7 +3,7 @@ import os
 import json
 from django.shortcuts import render
 from pathlib import Path
-
+from .models import Test
 # BASE_DIR 설정 (manage.py가 있는 Django 프로젝트 루트 경로)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -66,12 +66,33 @@ def mainpage(request):
         '수원시' : ['서둔동'],
     }
     
+    sido = request.GET.get('sido')
+    sigungu = request.GET.get('sigungu')
+    eupmyeondong = request.GET.get('eupmyeondong')
+
+    weather = None
+    if sido and sigungu and eupmyeondong:
+        sigungu_trimmed = sigungu[:-1]  # 김포시 → 김포
+        weather = Test.objects.filter(
+            sido=sido,
+            sigungu__contains=sigungu_trimmed,
+            eupmyeondong=eupmyeondong,
+            year=2024,
+            month=12
+        ).first()  # 1개만 가져옴
+
+    latitude = weather.latitude if weather else 37.5665
+    longitude = weather.longitude if weather else 126.9780
+
     context = {
         'region_json': json.dumps(region_data, ensure_ascii=False),
         'emd_json' : json.dumps(emd_data, ensure_ascii=False),
         'kakao_api_key': env('KAKAO_API_KEY'),  # 카카오 API 키 추가
-        'latitude': 37.5665,  # 기본 위도 (서울)
-        'longitude': 126.9780  # 기본 경도 (서울)
+        'latitude': latitude,  # 기본 위도 (서울)
+        'longitude': longitude,  # 기본 경도 (서울)
+        'weather': weather
     }
     
+    
+
     return render(request, 'main/mainpage.html', context)

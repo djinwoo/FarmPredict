@@ -2,10 +2,11 @@
 {% load static %}
 
 {% block content %}
+<form method="get">
     <!-- 🔍 검색창 컨테이너 -->
     <div class="top-section">
         <label for="sido">시·도 선택 :</label>
-        <select id="sido">
+        <select id="sido" name="sido">
             <option value="">시·도 선택</option>
             <!-- 특별시 및 광역시 먼저 -->
             <option value="서울특별시">서울특별시</option>
@@ -32,20 +33,21 @@
         </select>
 
         <label for="sigungu">시·군·구 선택 :</label>
-        <select id="sigungu">
+        <select id="sigungu" name="sigungu">
             <option value="">시·군·구 선택</option>
         </select>
 
         <label for="eupmyeondong">읍·면·동 선택 :</label>
-        <select id="eupmyeondong">
+        <select id="eupmyeondong" name="eupmyeondong">
             <option value="">읍·면·동 선택</option>
         </select>
 
         <button type="submit" class="search-button">
             <img src="{% static 'images/Search-icon.svg' %}" alt="검색">
         </button>
+        
     </div>
-
+</form>
     <!-- 📊 데이터 박스 & 지도 컨테이너 -->
     <div class="bottom-section">
         <div class="data-container">
@@ -57,29 +59,29 @@
                     <div class="weather-row">
                         <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
                         <div class="weather-text">
-                            <p>최저온도 : </p>
-                            <p>최고온도 : </p>
+                            <p>최저온도 : {{ weather.min_temp }}°C</p>
+                            <p>최고온도 : {{ weather.max_temp }}°C</p>
                         </div>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T2-icon.svg' %}" alt="습도" class="weather-icon">
-                        <p class="weather-text">습도 :</p>
+                        <p class="weather-text">습도 : {{ weather.humidity }}%</p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T3-icon.svg' %}" alt="풍속" class="weather-icon">
-                        <p class="weather-text">풍속 :</p>
+                        <p class="weather-text">풍속 : {{ weather.wind_speed }}m/s</p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T4-icon.svg' %}" alt="일사량" class="weather-icon">
-                        <p class="weather-text">일사량 :</p>
+                        <p class="weather-text">일사량 : {{ weather.solar_radiation }}</p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T5-icon.svg' %}" alt="강수량" class="weather-icon">
-                        <p class="weather-text">강수량 :</p>
+                        <p class="weather-text">강수량 : {{ weather.avg_precipitation }}mm</p>
                     </div>
                 </div>
             </div>

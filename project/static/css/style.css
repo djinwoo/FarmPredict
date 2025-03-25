@@ -14,7 +14,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 50px;
+    height: 70px;
     background: #2d2d2d;
     color: #fff;
     font-size: 22px;
@@ -82,16 +82,20 @@ body {
     position: relative;
     
     width: calc(100vw - 180px);  /* ⭕ 사이드바 고려하여 너비 조정 */
-    min-height: calc(100vh - 50px); 
+    min-height: calc(100vh - 70px); 
     background: #FFF;
     
     border-radius: 10px;
     padding: 20px;
 
     margin-left: 180px; /* 사이드바 공간 확보 */
-    margin-top: 50px;
+    margin-top: 70px;
 
     box-sizing: border-box;  /* ⭕ padding 포함하여 크기 계산 */
+}
+
+form {
+    display: contents;
 }
 
 /* 🔍 검색창 (위쪽 컨테이너) */
