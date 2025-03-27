@@ -337,3 +337,34 @@ form {
 .soil-text:last-child {
     margin-bottom: 0;
 }
+
+.weather-table {
+    width: 85.5%;
+    border-collapse: collapse;
+    margin-top: 60px;
+    font-size: 18px;
+    text-align: center;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}  
+
+.weather-table th {
+    background-color: #b5d7f2;
+    color: white;
+    padding: 10px;
+}
+
+.weather-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.weather-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.weather-table tr:hover {
+    background-color: #f1f1f1;
+}

@@ -101,6 +101,31 @@ def mainpage(request):
 
 def weatherpage(request):
     context = get_region_context()
+
+    sido = request.GET.get('sido')
+    sigungu = request.GET.get('sigungu')
+    eupmyeondong = request.GET.get('eupmyeondong')
+
+    weather_data = []
+
+    if sido and sigungu and eupmyeondong:
+        sigungu_trimmed = sigungu[:-1]  # 예: '김포시' → '김포'
+
+        # 2024년 1월 ~ 12월 데이터 가져오기
+        weather_data = Test.objects.filter(
+            sido=sido,
+            sigungu__contains=sigungu_trimmed,
+            eupmyeondong=eupmyeondong,
+            year=2024
+        ).order_by('month')
+
+        context.update({
+            'sido': sido,
+            'sigungu': sigungu,
+            'eupmyeondong': eupmyeondong,
+            'weather_data': weather_data,
+        })
+
     return render(request, 'main/weatherpage.html', context)
 
 def soilpage(request):

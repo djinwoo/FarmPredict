@@ -6,17 +6,38 @@
 <!-- ✅ 검색바 include -->
 {% include 'main/__searchbar.html' %}
 
-<!-- ✅ 날씨 상세 페이지 본문 -->
-<div class="weather-detail-container">
-    <h2>기상 데이터 상세 페이지</h2>
-    <p>선택한 지역의 상세 기상 데이터를 이곳에 보여줄 수 있습니다.</p>
+<!-- 표 출력 -->
+{% if weather_data %}
+    <table class="weather-table">
+        <thead>
+            <tr>
+                <th>년도</th>
+                <th>월</th>
+                <th>최저온도 (°C)</th>
+                <th>최고온도 (°C)</th>
+                <th>습도 (%)</th>
+                <th>풍속 (m/s)</th>
+                <th>일사량 (MJ/m²)</th>
+                <th>평균강수량 (mm)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for w in weather_data %}
+            <tr>
+                <td>{{ w.year }}</td>
+                <td>{{ w.month }}</td>
+                <td>{{ w.min_temp }}</td>
+                <td>{{ w.max_temp }}</td>
+                <td>{{ w.humidity }}</td>
+                <td>{{ w.wind_speed }}</td>
+                <td>{{ w.solar_radiation }}</td>
+                <td>{{ w.avg_precipitation }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
 
-    <!-- 예시: 지역 선택 결과 보여주기 -->
-    {% if request.GET.sido and request.GET.sigungu and request.GET.eupmyeondong %}
-        <p><strong>선택한 지역:</strong> {{ request.GET.sido }} / {{ request.GET.sigungu }} / {{ request.GET.eupmyeondong }}</p>
-    {% else %}
-        <p>지역을 선택해주세요.</p>
-    {% endif %}
-</div>
+{% endif %}
 
 {% endblock %}
