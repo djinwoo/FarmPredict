@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
-def mainpage(request):
+def get_region_context():
     region_data = {
         '서울특별시': [
         '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구',
@@ -65,7 +65,15 @@ def mainpage(request):
         '남양주시' : ['진건읍'],
         '수원시' : ['서둔동'],
     }
-    
+    return {
+        'region_json': json.dumps(region_data, ensure_ascii=False),
+        'emd_json': json.dumps(emd_data, ensure_ascii=False),
+        'kakao_api_key': env('KAKAO_API_KEY'),
+    }
+
+def mainpage(request):
+    base_context = get_region_context()
+
     sido = request.GET.get('sido')
     sigungu = request.GET.get('sigungu')
     eupmyeondong = request.GET.get('eupmyeondong')
@@ -81,22 +89,20 @@ def mainpage(request):
             month=12
         ).first()  # 1개만 가져옴
 
-    latitude = weather.latitude if weather else 37.5665
-    longitude = weather.longitude if weather else 126.9780
-
-    context = {
-        'region_json': json.dumps(region_data, ensure_ascii=False),
-        'emd_json' : json.dumps(emd_data, ensure_ascii=False),
-        'kakao_api_key': env('KAKAO_API_KEY'),  # 카카오 API 키 추가
-        'latitude': latitude,  # 기본 위도 (서울)
-        'longitude': longitude,  # 기본 경도 (서울)
+    base_context.update({
+        'latitude': weather.latitude if weather else 37.5665,
+        'longitude': weather.longitude if weather else 126.9780,
         'weather': weather
-    }
-    
-    
+    })
 
-    return render(request, 'main/mainpage.html', context)
+    return render(request, 'main/mainpage.html', base_context)
+    
 
 
 def weatherpage(request):
-    return render(request, 'main/weatherpage.html')
+    context = get_region_context()
+    return render(request, 'main/weatherpage.html', context)
+
+def soilpage(request):
+    context = get_region_context()
+    return render(request, 'main/soilpage.html', context)

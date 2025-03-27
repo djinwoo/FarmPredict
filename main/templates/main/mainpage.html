@@ -2,52 +2,8 @@
 {% load static %}
 
 {% block content %}
-<form method="get">
-    <!-- 🔍 검색창 컨테이너 -->
-    <div class="top-section">
-        <label for="sido">시·도 선택 :</label>
-        <select id="sido" name="sido">
-            <option value="">시·도 선택</option>
-            <!-- 특별시 및 광역시 먼저 -->
-            <option value="서울특별시">서울특별시</option>
-            <option value="광주광역시">광주광역시</option>
-            <option value="대구광역시">대구광역시</option>
-            <option value="대전광역시">대전광역시</option>
-            <option value="부산광역시">부산광역시</option>
-            <option value="세종특별자치시">세종특별자치시</option>
-            <option value="울산광역시">울산광역시</option>
-            <option value="인천광역시">인천광역시</option>
 
-            <!-- 도(道) 단위 -->
-            <option value="강원도">강원도</option>
-            <option value="경기도">경기도</option>
-            <option value="경상남도">경상남도</option>
-            <option value="경상북도">경상북도</option>
-            <option value="전라남도">전라남도</option>
-            <option value="전라북도">전라북도</option>
-            <option value="충청남도">충청남도</option>
-            <option value="충청북도">충청북도</option>
-
-            <!-- 특별자치도 -->
-            <option value="제주특별자치도">제주특별자치도</option>
-        </select>
-
-        <label for="sigungu">시·군·구 선택 :</label>
-        <select id="sigungu" name="sigungu">
-            <option value="">시·군·구 선택</option>
-        </select>
-
-        <label for="eupmyeondong">읍·면·동 선택 :</label>
-        <select id="eupmyeondong" name="eupmyeondong">
-            <option value="">읍·면·동 선택</option>
-        </select>
-
-        <button type="submit" class="search-button">
-            <img src="{% static 'images/Search-icon.svg' %}" alt="검색">
-        </button>
-        
-    </div>
-</form>
+{% include 'main/__searchbar.html' %}
     <!-- 📊 데이터 박스 & 지도 컨테이너 -->
     <div class="bottom-section">
         <div class="data-container">
@@ -60,32 +16,58 @@
                         <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
                         <div class="weather-text">
                             <p>최저온도 : 
-                                <a href="{% url 'main:weatherpage' %}">
-                                {{ weather.min_temp }}°C
+                                <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                                {{ weather.min_temp }}
                                 </a>
+                                °C
                             </p>
-                            <p>최고온도 : {{ weather.max_temp }}°C</p>
+                            <p>최고온도 : 
+                                <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                                {{ weather.max_temp }}
+                                </a>
+                                °C
+                            </p>
                         </div>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T2-icon.svg' %}" alt="습도" class="weather-icon">
-                        <p class="weather-text">습도 : {{ weather.humidity }}%</p>
+                        <p class="weather-text">습도 : 
+                            <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                            {{ weather.humidity }}
+                            </a>
+                            %
+                        </p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T3-icon.svg' %}" alt="풍속" class="weather-icon">
-                        <p class="weather-text">풍속 : {{ weather.wind_speed }}m/s</p>
+                        <p class="weather-text">풍속 : 
+                            <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                            {{ weather.wind_speed }}
+                            </a>
+                            m/s
+                        </p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T4-icon.svg' %}" alt="일사량" class="weather-icon">
-                        <p class="weather-text">일사량 : {{ weather.solar_radiation }}</p>
+                        <p class="weather-text">일사량 : 
+                            <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                            {{ weather.solar_radiation }}
+                            </a>
+                            MJ/m²
+                        </p>
                     </div>
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T5-icon.svg' %}" alt="강수량" class="weather-icon">
-                        <p class="weather-text">강수량 : {{ weather.avg_precipitation }}mm</p>
+                        <p class="weather-text">강수량 :
+                            <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                            {{ weather.avg_precipitation }}
+                            </a>
+                            mm
+                        </p>
                     </div>
                 </div>
             </div>
@@ -109,46 +91,6 @@
         <div class="map-container">
             <div id="map"></div>
         </div>
-<script>
-    // views.py에서 전달받은 데이터
-    const regionData = JSON.parse('{{ region_json|escapejs }}');
-    const emdData = JSON.parse('{{ emd_json|escapejs }}');  // 읍면동 데이터 추가
-    
-    // 시·도 선택시 시군구 채우기
-    document.getElementById('sido').addEventListener('change', function() {
-        const selectedSido = this.value;
-        const sigunguSelect = document.getElementById('sigungu');
-        sigunguSelect.innerHTML = '<option value="">시·군·구 선택</option>';
-    
-        if (selectedSido && regionData[selectedSido]) {
-            regionData[selectedSido].forEach(function(sigungu) {
-                const option = document.createElement('option');
-                option.value = sigungu;
-                option.textContent = sigungu;
-                sigunguSelect.appendChild(option);
-            });
-        }
-    
-        // 읍면동 초기화
-        document.getElementById('eupmyeondong').innerHTML = '<option value="">읍·면·동 선택</option>';
-    });
-    
-    // 시·군·구 선택시 읍면동 채우기
-    document.getElementById('sigungu').addEventListener('change', function() {
-        const selectedSigungu = this.value;
-        const eupmyeondongSelect = document.getElementById('eupmyeondong');
-        eupmyeondongSelect.innerHTML = '<option value="">읍·면·동 선택</option>';
-    
-        if (selectedSigungu && emdData[selectedSigungu]) {
-            emdData[selectedSigungu].forEach(function(emd) {
-                const option = document.createElement('option');
-                option.value = emd;
-                option.textContent = emd;
-                eupmyeondongSelect.appendChild(option);
-            });
-        }
-    });
-</script>
 <!-- 카카오 지도 API 추가 -->
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_api_key }}"></script>
 

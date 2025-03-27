@@ -100,8 +100,8 @@ form {
 
 /* 🔍 검색창 (위쪽 컨테이너) */
 .top-section {
-    width: 81%;
-    max-width: 1060px;
+    width: 83%;
+    max-width: 1600px;
     height: 50px;
     background: #EDEDED;
     display: flex;
@@ -110,15 +110,15 @@ form {
     gap: 16px;
     border-radius: 8px;
     padding: 10px 22px;
-    margin-top: 14px;
-    margin-bottom: 8px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* 📊 데이터 & 지도 컨테이너 */
 .bottom-section {
     width: 85%;  /* 🔽 기존보다 가로 폭 5% 줄이기 */
-    max-width: 1100px;  /* 🔽 최대 너비 조정 */
+    max-width: 2000px;  /* 🔽 최대 너비 조정 */
     height: 600px;  /* 🔼 기존보다 세로 50px 증가 */
     
     display: flex;
@@ -126,7 +126,7 @@ form {
     align-items: flex-start; /* 위쪽 정렬 */
     
     gap: 30px; /* 두 컨테이너 사이 간격 */
-    margin-top: 35px;
+    margin-top: 40px;
 }
 
 /* 🔍 검색 버튼 (돋보기 아이콘) */

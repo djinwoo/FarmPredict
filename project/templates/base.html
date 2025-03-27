@@ -18,11 +18,11 @@
     <nav class="sidebar">
         <ul>
             <li class="menu-title">메인 시스템</li>
-            <li><img src="{% static 'images/Home-icon.svg' %}" width="24"><a href="#">메인페이지</a></li>
+            <li><img src="{% static 'images/Home-icon.svg' %}" width="24"><a href="{% url 'main:mainpage' %}">메인페이지</a></li>
 
             <li class="menu-title">상세 데이터</li>
-            <li><img src="{% static 'images/weather-icon.svg' %}" width="24"><a href="#">기상데이터</a></li>
-            <li><img src="{% static 'images/Temperature-icon.svg' %}" width="24"><a href="#">토양데이터</a></li>
+            <li><img src="{% static 'images/weather-icon.svg' %}" width="24"><a href="{% url 'main:weatherpage' %}">기상데이터</a></li>
+            <li><img src="{% static 'images/Temperature-icon.svg' %}" width="24"><a href="{% url 'main:soilpage' %}">토양데이터</a></li>
         </ul>
     </nav>
 

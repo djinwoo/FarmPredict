@@ -1,0 +1,109 @@
+{% load static %}
+<!-- main/templates/main/_searchbar.html -->
+<form method="get">
+    <div class="top-section">
+        <label for="sido">시·도 선택 :</label>
+        <select id="sido" name="sido">
+            <option value="">시·도 선택</option>
+            <option value="서울특별시" {% if request.GET.sido == '서울특별시' %}selected{% endif %}>서울특별시</option>
+            <option value="광주광역시" {% if request.GET.sido == '광주광역시' %}selected{% endif %}>광주광역시</option>
+            <option value="대구광역시" {% if request.GET.sido == '대구광역시' %}selected{% endif %}>대구광역시</option>
+            <option value="대전광역시" {% if request.GET.sido == '대전광역시' %}selected{% endif %}>대전광역시</option>
+            <option value="부산광역시" {% if request.GET.sido == '부산광역시' %}selected{% endif %}>부산광역시</option>
+            <option value="세종특별자치시" {% if request.GET.sido == '세종특별자치시' %}selected{% endif %}>세종특별자치시</option>
+            <option value="울산광역시" {% if request.GET.sido == '울산광역시' %}selected{% endif %}>울산광역시</option>
+            <option value="인천광역시" {% if request.GET.sido == '인천광역시' %}selected{% endif %}>인천광역시</option>
+            <option value="강원도" {% if request.GET.sido == '강원도' %}selected{% endif %}>강원도</option>
+            <option value="경기도" {% if request.GET.sido == '경기도' %}selected{% endif %}>경기도</option>
+            <option value="경상남도" {% if request.GET.sido == '경상남도' %}selected{% endif %}>경상남도</option>
+            <option value="경상북도" {% if request.GET.sido == '경상북도' %}selected{% endif %}>경상북도</option>
+            <option value="전라남도" {% if request.GET.sido == '전라남도' %}selected{% endif %}>전라남도</option>
+            <option value="전라북도" {% if request.GET.sido == '전라북도' %}selected{% endif %}>전라북도</option>
+            <option value="충청남도" {% if request.GET.sido == '충청남도' %}selected{% endif %}>충청남도</option>
+            <option value="충청북도" {% if request.GET.sido == '충청북도' %}selected{% endif %}>충청북도</option>
+            <option value="제주특별자치도" {% if request.GET.sido == '제주특별자치도' %}selected{% endif %}>제주특별자치도</option>
+        </select>
+
+        <label for="sigungu">시·군·구 선택 :</label>
+        <select id="sigungu" name="sigungu">
+            <option value="">시·군·구 선택</option>
+        </select>
+
+        <label for="eupmyeondong">읍·면·동 선택 :</label>
+        <select id="eupmyeondong" name="eupmyeondong">
+            <option value="">읍·면·동 선택</option>
+        </select>
+
+        <button type="submit" class="search-button">
+            <img src="{% static 'images/Search-icon.svg' %}" alt="검색">
+        </button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const regionData = JSON.parse('{{ region_json|escapejs }}');
+        const emdData = JSON.parse('{{ emd_json|escapejs }}');
+
+        const selectedSido = "{{ request.GET.sido|default:'' }}";
+        const selectedSigungu = "{{ request.GET.sigungu|default:'' }}";
+        const selectedEmd = "{{ request.GET.eupmyeondong|default:'' }}";
+
+        const sidoSelect = document.getElementById('sido');
+        const sigunguSelect = document.getElementById('sigungu');
+        const emdSelect = document.getElementById('eupmyeondong');
+
+        // 시군구 초기화
+        if (selectedSido && regionData[selectedSido]) {
+            regionData[selectedSido].forEach(function (sigungu) {
+                const option = document.createElement('option');
+                option.value = sigungu;
+                option.textContent = sigungu;
+                if (sigungu === selectedSigungu) option.selected = true;
+                sigunguSelect.appendChild(option);
+            });
+        }
+
+        // 읍면동 초기화
+        if (selectedSigungu && emdData[selectedSigungu]) {
+            emdData[selectedSigungu].forEach(function (emd) {
+                const option = document.createElement('option');
+                option.value = emd;
+                option.textContent = emd;
+                if (emd === selectedEmd) option.selected = true;
+                emdSelect.appendChild(option);
+            });
+        }
+
+        // 시도 변경 시 시군구 동적으로 로드
+        sidoSelect.addEventListener('change', function () {
+            const selected = this.value;
+            sigunguSelect.innerHTML = '<option value="">시·군·구 선택</option>';
+            emdSelect.innerHTML = '<option value="">읍·면·동 선택</option>';
+
+            if (regionData[selected]) {
+                regionData[selected].forEach(function (sigungu) {
+                    const option = document.createElement('option');
+                    option.value = sigungu;
+                    option.textContent = sigungu;
+                    sigunguSelect.appendChild(option);
+                });
+            }
+        });
+
+        // 시군구 변경 시 읍면동 동적으로 로드
+        sigunguSelect.addEventListener('change', function () {
+            const selected = this.value;
+            emdSelect.innerHTML = '<option value="">읍·면·동 선택</option>';
+
+            if (emdData[selected]) {
+                emdData[selected].forEach(function (emd) {
+                    const option = document.createElement('option');
+                    option.value = emd;
+                    option.textContent = emd;
+                    emdSelect.appendChild(option);
+                });
+            }
+        });
+    });
+</script>

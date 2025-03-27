@@ -6,4 +6,5 @@ app_name = "main"
 urlpatterns = [
     path('', mainpage, name="mainpage"),
     path('weatherpage/', weatherpage, name="weatherpage"),
+    path('soilpage/', soilpage, name="soilpage"),
 ]
