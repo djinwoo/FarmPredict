@@ -96,3 +96,7 @@ def mainpage(request):
     
 
     return render(request, 'main/mainpage.html', context)
+
+
+def weatherpage(request):
+    return render(request, 'main/weatherpage.html')

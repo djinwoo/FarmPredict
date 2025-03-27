@@ -59,7 +59,11 @@
                     <div class="weather-row">
                         <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
                         <div class="weather-text">
-                            <p>최저온도 : {{ weather.min_temp }}°C</p>
+                            <p>최저온도 : 
+                                <a href="{% url 'main:weatherpage' %}">
+                                {{ weather.min_temp }}°C
+                                </a>
+                            </p>
                             <p>최고온도 : {{ weather.max_temp }}°C</p>
                         </div>
                     </div>
