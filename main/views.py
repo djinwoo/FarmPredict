@@ -119,6 +119,23 @@ def weatherpage(request):
             year=2024
         ).order_by('month')
 
+        # ✅ 평균값 계산        
+        if weather_data:
+            fields = ['min_temp', 'max_temp', 'humidity', 'wind_speed', 'solar_radiation', 'avg_precipitation']
+            averages = {}
+            for field in fields:
+                values = [
+                    float(getattr(w, field))
+                    for w in weather_data
+                    if getattr(w, field) is not None and str(getattr(w, field)).replace('.', '', 1).replace('-', '', 1).isdigit()
+                ]
+                avg = round(sum(values) / len(values), 2) if values else None
+                averages[field] = avg
+
+            averages['year'] = 2024
+            averages['month'] = '평균'
+            context['weather_avg'] = averages
+
         context.update({
             'sido': sido,
             'sigungu': sigungu,
