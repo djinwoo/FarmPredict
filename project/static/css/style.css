@@ -197,7 +197,7 @@ form {
 .data-container {
     width: 47%;  /* 🔽 기존보다 살짝 줄이기 */
     height: 99%;  /* 🔼 `bottom-section`의 높이에 맞춤 */
-    background: #F5EFE6;
+    background: #f6f2eb;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -244,8 +244,6 @@ form {
     align-items: center;
     width: 80%;
     height: 10%;
-    background-color: #b5d7f2;
-    border-radius: 4px;
     clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
 }
 
@@ -265,8 +263,6 @@ form {
     align-items: center;
     width: 80%;
     height: 10%;
-    background-color: #D8A25C;
-    border-radius: 4px;
     clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
 }
 
@@ -287,6 +283,8 @@ form {
     justify-content: center; /* 🔥 위쪽 정렬 */
     width: 100%; /* 부모 크기 유지 */
     height: 100%;
+    background-color: #a6d3f2;
+    border-radius: 4px;
 }
 
 
@@ -298,6 +296,8 @@ form {
     width: 100%; /* 부모 크기 유지 */
     height: 100%;
     padding-left: 20px;
+    background-color: #d9a066;
+    border-radius: 4px;
 }
 
 /* ✅ 개별 행 스타일 (아이콘 + 텍스트) */
@@ -312,6 +312,7 @@ form {
 .weather-icon {
     width: 40px; /* 아이콘 크기 */
     height: 40px;
+    padding-left: 10px;
 }
 
 /* ✅ 텍스트 스타일 */
