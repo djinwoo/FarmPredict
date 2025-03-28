@@ -34,6 +34,20 @@
                 <td>{{ w.avg_precipitation }}</td>
             </tr>
             {% endfor %}
+
+            <!-- 평균 행 -->
+            {% if weather_avg %}
+            <tr>
+                <td>{{ weather_avg.year }}</td>
+                <td>{{ weather_avg.month }}</td>
+                <td>{{ weather_avg.min_temp }}</td>
+                <td>{{ weather_avg.max_temp }}</td>
+                <td>{{ weather_avg.humidity }}</td>
+                <td>{{ weather_avg.wind_speed }}</td>
+                <td>{{ weather_avg.solar_radiation }}</td>
+                <td>{{ weather_avg.avg_precipitation }}</td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
 {% else %}
