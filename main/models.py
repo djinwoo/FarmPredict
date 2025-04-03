@@ -8,7 +8,7 @@
 from django.db import models
 
 
-class Test(models.Model):
+class Weatherdata(models.Model):
     year = models.IntegerField(db_column="년", primary_key=True)  # 기본키 설정 (연도를 기본키로 사용)
     month = models.IntegerField(db_column="월")
     sido = models.CharField(max_length=100, db_column="시도")
@@ -25,8 +25,30 @@ class Test(models.Model):
     longitude = models.FloatField(db_column="경도")
 
     class Meta:
-        db_table = "test"  # SQLite의 'test' 테이블과 매칭
+        db_table = "weather"  # SQLite의 'test' 테이블과 매칭
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
     def __str__(self):
         return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation} {self.latitude} {self.longitude}"
+
+class Soildata(models.Model):
+    year = models.IntegerField(db_column="년",primary_key=True)
+    sido = models.CharField(max_length=100, db_column="시도")
+    sigungu = models.CharField(max_length=100, db_column="시군구")
+    eupmyeondong = models.CharField(max_length=100, db_column="읍면동")
+    ph = models.FloatField(db_column='산도')
+    organic_matter = models.FloatField(db_column='유기물')
+    available_phosphorus = models.FloatField(db_column='유효인산')
+    potassium = models.FloatField(db_column='칼륨')
+    calcium = models.FloatField(db_column='칼슘')
+    magnesium = models.FloatField(db_column='마그네슘')
+    nitrogen = models.FloatField(db_column='질소')
+    latitude = models.FloatField(db_column='위도')
+    longitude = models.FloatField(db_column='경도')
+
+    class Meta:
+        db_table = "gangwondo"
+        managed = False
+
+    def __str__(self):
+        return f"{self.year} {self.sido} {self.sigungu} {self.eupmyeondong} {self.ph} {self.organic_matter} {self.available_phosphorus} {self.potassium} {self.calcium} {self.magnesium} {self.nitrogen} {self.latitude} {self.longitude}"

@@ -80,6 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "main/test.db",
+    },
+    'soildata': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "main/soildata.db",
     }
 }
 # Password validation

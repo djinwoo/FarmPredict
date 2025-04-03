@@ -6,17 +6,51 @@
 <!-- ✅ 검색바 include -->
 {% include 'main/__searchbar.html' %}
 
-<!-- ✅ 날씨 상세 페이지 본문 -->
-<div class="weather-detail-container">
-    <h2>토양 데이터 상세 페이지</h2>
-    <p>선택한 지역의 상세 기상 데이터를 이곳에 보여줄 수 있습니다.</p>
+{% if soil_data %}
+    <table class="soil-table">
+        <thead>
+            <tr>
+                <th>년도</th>
+                <th>산도(pH)</th>
+                <th>유기물(g/kg)</th>
+                <th>유효인산(mg/kg)</th>
+                <th>칼륨(cmol+/kg)</th>
+                <th>칼슘(cmol+/kg)</th>
+                <th>마그네슘(cmol(+)/kg)</th>
+                <th>질소(%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in soil_data %}
+            <tr>
+                <td>{{ s.year }}</td>
+                <td>{{ s.ph }}</td>
+                <td>{{ s.organic_matter }}</td>
+                <td>{{ s.available_phosphorus }}</td>
+                <td>{{ s.potassium }}</td>
+                <td>{{ s.calcium }}</td>
+                <td>{{ s.magnesium }}</td>
+                <td>{{ s.nitrogen }}</td>
+            </tr>
+            {% endfor %}
 
-    <!-- 예시: 지역 선택 결과 보여주기 -->
-    {% if request.GET.sido and request.GET.sigungu and request.GET.eupmyeondong %}
-        <p><strong>선택한 지역:</strong> {{ request.GET.sido }} / {{ request.GET.sigungu }} / {{ request.GET.eupmyeondong }}</p>
-    {% else %}
-        <p>지역을 선택해주세요.</p>
-    {% endif %}
-</div>
+            <!-- 평균 행 -->
+            {% if soil_avg %}
+            <tr>
+                <td>{{ soil_avg.year}}</td>
+                <td>{{ soil_avg.ph }}</td>
+                <td>{{ soil_avg.organic_matter }}</td>
+                <td>{{ soil_avg.available_phosphorus }}</td>
+                <td>{{ soil_avg.potassium }}</td>
+                <td>{{ soil_avg.calcium }}</td>
+                <td>{{ soil_avg.magnesium }}</td>
+                <td>{{ soil_avg.nitrogen }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% else %}
+
+{% endif %}
 
 {% endblock %}
