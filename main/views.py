@@ -21,7 +21,7 @@ def mainpage(request):
 
     weather = None
     if sido and sigungu and eupmyeondong:
-        weather = Weatherdata.objects.filter(
+        weather = Weatherdata.objects.using('test').filter(
             sido=sido,
             sigungu=sigungu,
             eupmyeondong=eupmyeondong,
@@ -64,7 +64,7 @@ def weatherpage(request):
     if sido and sigungu and eupmyeondong:
 
         # 2024년 1월 ~ 12월 데이터 가져오기
-        weather_data = Weatherdata.objects.filter(
+        weather_data = Weatherdata.objects.using('test').filter(
             sido=sido,
             sigungu=sigungu,
             eupmyeondong=eupmyeondong,

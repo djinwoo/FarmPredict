@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Weatherdata, Soildata
+from .models import Weatherdata, Soildata,Region
 
-admin.site.register(Weatherdata)
+admin.site.register(Region)

@@ -79,11 +79,15 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "main/test.db",
+        'NAME': BASE_DIR / "main/region.db",
     },
     'soildata': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "main/soildata.db",
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "main/test.db",
     }
 }
 # Password validation
