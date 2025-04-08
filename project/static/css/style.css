@@ -177,7 +177,7 @@ form {
 /* 🔽 드롭다운(선택 박스) 크기 조절 */
 .top-section select {
     font-size: 16px;  /* 글씨 크기 키우기 */
-    width: 130px;  /* 선택 박스 너비 키우기 */
+    width: 150px;  /* 선택 박스 너비 키우기 */
     height: 40px;  /* 선택 박스 높이 키우기 */
     border-radius: 8px;  /* 둥근 모서리 */
 }

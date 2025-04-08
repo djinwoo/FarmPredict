@@ -16,7 +16,7 @@
                         <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
                         <div class="weather-text">
                             <p>최저온도 : 
-                                <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
+                                <a href="{% if sido and sigungu and eupmyeondong %}{% url 'main:weatherpage' %}?sido={{ sido }}&sigungu={{ sigungu }}&eupmyeondong={{ eupmyeondong }}{% endif %}">
                                 {{ weather.min_temp }}
                                 </a>
                                 °C

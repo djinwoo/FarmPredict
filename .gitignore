@@ -14,6 +14,7 @@ Pipfile
 .env
 main/test.db
 main/soildata.db
+main/region.db
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/
