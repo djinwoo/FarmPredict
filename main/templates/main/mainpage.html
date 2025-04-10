@@ -88,7 +88,7 @@
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                         {{ soil.organic_matter }}
                         </a>
-                        %
+                        g/kg
                     </p>
                     <p class="soil-text">유효인산 :&nbsp;
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
@@ -112,12 +112,13 @@
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                         {{ soil.magnesium }}
                         </a>
+                        cmol/kg
                     </p>
                     <p class="soil-text">질소 :&nbsp;
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                         {{ soil.nitrogen }}
                         </a>
-                        %
+                        g/kg
                     </p>
                 </div>
             </div>

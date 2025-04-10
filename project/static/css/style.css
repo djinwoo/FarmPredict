@@ -17,8 +17,8 @@ body {
     height: 70px;
     background: #2d2d2d;
     color: #fff;
-    font-size: 22px;
-    font-weight:700;
+    font-size: 28px;
+    font-weight:600;
     display: flex;
     align-items: center;
     padding-left: 28px;
@@ -29,10 +29,10 @@ body {
     position: fixed;
     top: 50px;
     left: 0px;
-    width: 180px;
+    width: 200px;
     height: calc(100vh - 50px);
     background-color: #8c4a1d;
-    padding-top: 10px;
+    padding-top: 12px;
     padding-left: 10px;
     z-index: 999;
     display: flex;
@@ -48,11 +48,11 @@ body {
 .sidebar li {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
+    padding: 12px 10px;
 }
 
 .sidebar img {
-    width: 20px;
+    width: 26px;
     height: auto;
     margin-right: 10px;
 }
@@ -62,14 +62,14 @@ body {
     text-decoration: none;
     font-family: 'Inter', sans-serif; 
     font-weight: 500;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .menu-title {
     font-weight: bold;  /* 글씨 굵게 */
     color: #E5E5E5;  /* 연한 회색 (가독성 증가) */
     margin-top: 20px;  /* 위쪽 간격 추가 */
-    font-size: 15px;  /* 글씨 크기 설정 */
+    font-size: 19px;  /* 글씨 크기 설정 */
 }
 
 /* 🌟 컨테이너 (메인 영역) */
@@ -168,7 +168,7 @@ form {
 /* 🔤 검색창 라벨(시·도 선택, 행정구역 선택) */
 .top-section label {
     margin-right: -40px;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 500;
     color: #333;
     transition: transform 0.2s ease-in-out; /* 애니메이션 추가 */
@@ -176,7 +176,7 @@ form {
 
 /* 🔽 드롭다운(선택 박스) 크기 조절 */
 .top-section select {
-    font-size: 16px;  /* 글씨 크기 키우기 */
+    font-size: 18px;  /* 글씨 크기 키우기 */
     width: 150px;  /* 선택 박스 너비 키우기 */
     height: 40px;  /* 선택 박스 높이 키우기 */
     border-radius: 8px;  /* 둥근 모서리 */
@@ -249,7 +249,7 @@ form {
 
 /* 🔹 텍스트 스타일 (보조) */
 .topdata1-text {
-    font-size: 20px;
+    font-size: 26px;
     text-align: center; /* 🔥 텍스트 왼쪽 정렬 */
     width: 100%; /* 🔥 부모 컨테이너의 전체 너비 사용 */
     font-weight: bold;
@@ -266,10 +266,9 @@ form {
 }
 
 .topdata2-text {
-    font-size: 20px;
+    font-size: 26px;
     text-align: center; /* 🔥 텍스트 왼쪽 정렬 */
     width: 100%; /* 🔥 부모 컨테이너의 전체 너비 사용 */
-    font-size: 20px;
     font-weight: bold;
     color: black; /* 글씨 색 */
 }
@@ -310,12 +309,12 @@ form {
 .weather-icon {
     width: 40px; /* 아이콘 크기 */
     height: 40px;
-    padding-left: 10px;
+    padding-left: 6px;
 }
 
 /* ✅ 텍스트 스타일 */
 .weather-text {
-    font-size: 18px; /* 글씨 크기 */
+    font-size: 19px; /* 글씨 크기 */
     font-weight: 500; /* 글씨 두껍게 */
     color: black; /* 글씨 색 */
 }
@@ -327,8 +326,8 @@ form {
 .soil-text {
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
-    margin-bottom: 36px;
-    font-size: 18px;
+    margin-bottom: 32px;
+    font-size: 19px;
     font-weight: 500;
     color: black;
 }

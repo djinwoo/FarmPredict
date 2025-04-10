@@ -54,8 +54,8 @@ def mainpage(request):
         'eupmyeondong': eupmyeondong,
         'weather': weather,
         'soil': soil,
-        'latitude': weather.latitude if weather else 37.5665,
-        'longitude': weather.longitude if weather else 126.9780,
+        'latitude': soil.latitude if soil else 37.5665,
+        'longitude': soil.longitude if soil else 126.9780,
         'kakao_api_key': kakao_api_key,
     })
 
