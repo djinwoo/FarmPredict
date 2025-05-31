@@ -397,3 +397,35 @@ form {
 .soil-table tr:hover {
     background-color: #f3e8db;
 }
+
+.number-pagination {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.number-pagination a {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 8px 14px;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.number-pagination a:hover {
+    background-color: #d0e0ff;
+    border-color: #6699ff;
+    color: #6699ff;
+}
+
+.number-pagination a.active {
+    background-color: #b5d7f2;
+    color: white;
+    border-color: #b5d7f2;
+    font-weight: bold;
+    pointer-events: none;
+}

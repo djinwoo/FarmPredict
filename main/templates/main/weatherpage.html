@@ -50,8 +50,17 @@
             {% endif %}
         </tbody>
     </table>
+        <div class="number-pagination">
+        {% for y in year_list %}
+            <a href="?sido={{ sido }}&sigungu={{ sigungu }}&eupmyeondong={{ eupmyeondong }}&page={{ forloop.counter }}"
+            class="{% if current_year|stringformat:'s' == y|stringformat:'s' %}active{% endif %}">
+            {{ forloop.counter }}
+            </a>
+        {% endfor %}
+        </div>
 {% else %}
-
+    <p style="text-align: center; margin-top: 50px;">데이터가 없습니다.</p>
 {% endif %}
+    
 
 {% endblock %}

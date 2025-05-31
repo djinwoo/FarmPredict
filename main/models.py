@@ -9,12 +9,12 @@ from django.db import models
 
 class Region(models.Model):
     id = models.AutoField(primary_key=True)
-    sido = models.TextField(db_column="sido")
-    sigungu = models.TextField(db_column="sigungu")
-    eupmyeondong = models.TextField(db_column="eupmyeondong")
+    sido = models.TextField(db_column="시도")
+    sigungu = models.TextField(db_column="시군구")
+    eupmyeondong = models.TextField(db_column="읍면동")
 
     class Meta:
-        db_table = 'region'  # 실제 SQLite 테이블 이름과 동일하게 설정
+        db_table = 'Region'  # 실제 SQLite 테이블 이름과 동일하게 설정
         managed = False  # Django가 이 테이블을 생성하거나 수정하지 않음
 
     
@@ -27,22 +27,19 @@ class Weatherdata(models.Model):
     sido = models.CharField(max_length=100, db_column="시도")
     sigungu = models.CharField(max_length=100, db_column="시군구")
     eupmyeondong = models.CharField(max_length=100, db_column="읍면동")
-    min_temp = models.FloatField(db_column="최저온도")
-    max_temp = models.FloatField(db_column="최고온도")
+    min_temp = models.FloatField(db_column="최고기온")
+    max_temp = models.FloatField(db_column="최저기온")
     humidity = models.FloatField(db_column="습도")
     wind_speed = models.FloatField(db_column="풍속")
     solar_radiation = models.CharField(max_length=100, db_column="일사량")
-    cumulative_precipitation = models.CharField(max_length=100, db_column="누적강수량")
-    avg_precipitation = models.FloatField(db_column="평균강수량")
-    latitude = models.FloatField(db_column="위도")
-    longitude = models.FloatField(db_column="경도")
+    avg_precipitation = models.FloatField(db_column="강수량")
 
     class Meta:
-        db_table = "weather"  # SQLite의 'test' 테이블과 매칭
+        db_table = "Sheet1"  # SQLite의 'test' 테이블과 매칭
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
     def __str__(self):
-        return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation} {self.latitude} {self.longitude}"
+        return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation}"
 
 class Soildata(models.Model):
     year = models.IntegerField(db_column="년",primary_key=True)

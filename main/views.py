@@ -26,15 +26,29 @@ def mainpage(request):
     sigungu = request.GET.get('sigungu')
     eupmyeondong = request.GET.get('eupmyeondong')
 
+    SPECIAL_REGIONS = [
+        ("대구광역시", "북구"),
+        ("포항시", "북구"),
+        ("서울특별시", "서초구"),
+        ("부산광역시", "강서구"),
+        ("경기도", "용인시 처인구"),
+    ]
+
     weather = None
-    if sido and sigungu and eupmyeondong:
-        weather = Weatherdata.objects.using('test').filter(
+    if sido and sigungu:
+        is_special = (sido, sigungu) in SPECIAL_REGIONS
+
+        # ✅ 날씨 조회
+        weather_qs = Weatherdata.objects.using('climate').filter(
             sido=sido,
             sigungu=sigungu,
-            eupmyeondong=eupmyeondong,
-            year=2024,
-            month=12
-        ).first()
+            year=2025,
+            month=5
+        )
+        if not is_special and eupmyeondong:
+            weather_qs = weather_qs.filter(eupmyeondong=eupmyeondong)
+
+        weather = weather_qs.first()
 
     soil = None
     if sido and sigungu and eupmyeondong:
@@ -68,42 +82,55 @@ def weatherpage(request):
     sido = request.GET.get('sido')
     sigungu = request.GET.get('sigungu')
     eupmyeondong = request.GET.get('eupmyeondong')
+    page = int(request.GET.get('page', 1))
 
     weather_data = []
+    year_list = []
+    selected_year = None
 
     if sido and sigungu and eupmyeondong:
+        # ✅ 해당 지역의 모든 연도 추출 (최신순)
+        year_list = Weatherdata.objects.using('climate') \
+            .filter(sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong) \
+            .values_list('year', flat=True).distinct().order_by('-year')
 
-        # 2024년 1월 ~ 12월 데이터 가져오기
-        weather_data = Weatherdata.objects.using('test').filter(
-            sido=sido,
-            sigungu=sigungu,
-            eupmyeondong=eupmyeondong,
-            year=2024
-        ).order_by('month')
+        year_list = list(year_list)
+        if page <= len(year_list):
+            selected_year = year_list[page - 1]  # 페이지 번호에 맞는 연도 선택
 
-        # ✅ 평균값 계산        
-        if weather_data:
-            fields = ['min_temp', 'max_temp', 'humidity', 'wind_speed', 'solar_radiation', 'avg_precipitation']
-            averages = {}
-            for field in fields:
-                values = [
-                    float(getattr(w, field))
-                    for w in weather_data
-                    if getattr(w, field) is not None and str(getattr(w, field)).replace('.', '', 1).replace('-', '', 1).isdigit()
-                ]
-                avg = round(sum(values) / len(values), 2) if values else None
-                averages[field] = avg
+            weather_data = Weatherdata.objects.using('climate').filter(
+                sido=sido,
+                sigungu=sigungu,
+                eupmyeondong=eupmyeondong,
+                year=selected_year
+            ).order_by('month')
 
-            averages['year'] = 2024
-            averages['month'] = '평균'
-            context['weather_avg'] = averages
+            # ✅ 평균 계산
+            if weather_data:
+                fields = ['min_temp', 'max_temp', 'humidity', 'wind_speed', 'solar_radiation', 'avg_precipitation']
+                averages = {}
+                for field in fields:
+                    values = [
+                        float(getattr(w, field))
+                        for w in weather_data
+                        if getattr(w, field) is not None and str(getattr(w, field)).replace('.', '', 1).replace('-', '', 1).isdigit()
+                    ]
+                    avg = round(sum(values) / len(values), 2) if values else None
+                    averages[field] = avg
 
-        context.update({
-            'sido': sido,
-            'sigungu': sigungu,
-            'eupmyeondong': eupmyeondong,
-            'weather_data': weather_data,
-        })
+                averages['year'] = selected_year
+                averages['month'] = '평균'
+                context['weather_avg'] = averages
+
+    context.update({
+        'sido': sido,
+        'sigungu': sigungu,
+        'eupmyeondong': eupmyeondong,
+        'weather_data': weather_data,
+        'year_list': year_list,
+        'current_page': page,
+        'current_year': selected_year,
+    })
 
     return render(request, 'main/weatherpage.html', context)
 

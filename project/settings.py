@@ -85,9 +85,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "main/soildata.db",
     },
-    'test': {
+    'climate': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "main/test.db",
+        'NAME': BASE_DIR / "main/climate.db",
     }
 }
 # Password validation
