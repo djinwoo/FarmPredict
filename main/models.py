@@ -57,7 +57,7 @@ class Soildata(models.Model):
     longitude = models.FloatField(db_column='경도')
 
     class Meta:
-        db_table = "gangwondo"
+        db_table = "soildata"
         managed = False
 
     def __str__(self):

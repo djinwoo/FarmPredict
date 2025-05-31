@@ -81,9 +81,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "main/region.db",
     },
-    'soildata': {
+    'soil': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "main/soildata.db",
+        'NAME': BASE_DIR / "main/soil.db",
     },
     'climate': {
         'ENGINE': 'django.db.backends.sqlite3',

@@ -53,7 +53,7 @@ def mainpage(request):
     soil = None
     if sido and sigungu and eupmyeondong:
         for y in [2024, 2023, 2022]:
-            soil = Soildata.objects.using('soildata').filter(
+            soil = Soildata.objects.using('soil').filter(
                 sido=sido,
                 sigungu=sigungu,
                 eupmyeondong=eupmyeondong,
@@ -143,13 +143,13 @@ def soilpage(request):
 
     if sido and sigungu and eupmyeondong:
         # 연도별 데이터 불러오기
-        soil_2024 = Soildata.objects.using('soildata').filter(
+        soil_2024 = Soildata.objects.using('soil').filter(
             sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong, year=2024
         ).first()
-        soil_2023 = Soildata.objects.using('soildata').filter(
+        soil_2023 = Soildata.objects.using('soil').filter(
             sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong, year=2023
         ).first()
-        soil_2022 = Soildata.objects.using('soildata').filter(
+        soil_2022 = Soildata.objects.using('soil').filter(
             sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong, year=2022
         ).first()
 
