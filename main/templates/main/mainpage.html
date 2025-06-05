@@ -15,13 +15,13 @@
                     <div class="weather-row">
                         <img src="{% static 'images/T1-icon.svg' %}" alt="온도" class="weather-icon">
                         <div class="weather-text">
-                            <p>최저온도 : 
+                            <p>최고온도 : 
                                 <a href="{% if sido and sigungu and eupmyeondong %}{% url 'main:weatherpage' %}?sido={{ sido }}&sigungu={{ sigungu }}&eupmyeondong={{ eupmyeondong }}{% endif %}">
                                 {{ weather.min_temp }}
                                 </a>
                                 °C
                             </p>
-                            <p>최고온도 : 
+                            <p>최저온도 : 
                                 <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                                 {{ weather.max_temp }}
                                 </a>
@@ -118,7 +118,7 @@
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                         {{ soil.nitrogen }}
                         </a>
-                        g/kg
+                        
                     </p>
                 </div>
             </div>
