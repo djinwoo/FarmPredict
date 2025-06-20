@@ -398,12 +398,12 @@ form {
     background-color: #f3e8db;
 }
 
-.number-pagination {
+.weather-pagination {
     text-align: center;
     margin: 30px 0;
 }
 
-.number-pagination a {
+.weather-pagination a {
     display: inline-block;
     margin: 0 5px;
     padding: 8px 14px;
@@ -416,16 +416,153 @@ form {
     transition: background-color 0.2s, color 0.2s;
 }
 
-.number-pagination a:hover {
+.weather-pagination a:hover {
     background-color: #d0e0ff;
     border-color: #6699ff;
     color: #6699ff;
 }
 
-.number-pagination a.active {
+.weather-pagination a.active {
     background-color: #b5d7f2;
     color: white;
     border-color: #b5d7f2;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.cabbage-pagination {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.cabbage-pagination a {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 8px 14px;
+    background-color: #eefae3;
+    color: #4d7c0f;
+    border-radius: 6px;
+    border: 1px solid #cde2b9;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.cabbage-pagination a:hover {
+    background-color: #cce9a1;
+    border-color: #b1d98d;
+    color: #3c5f09;
+}
+
+.cabbage-pagination a.active {
+    background-color: #9fd373;
+    color: white;
+    border-color: #9fd373;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.cabbage-table {
+    width: 85.5%;
+    border-collapse: collapse;
+    font-size: 16px;
+    text-align: center;
+    background-color: #fefefe;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 헤더 배경 - 연두색 계열 */
+.cabbage-table th {
+    background-color: #a8d08d;
+    color: white;
+    padding: 12px;
+}
+
+/* 셀 기본 패딩 및 하단선 */
+.cabbage-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 짝수 행 배경 */
+.cabbage-table tr:nth-child(even) {
+    background-color: #f8fbf5;
+}
+
+/* 호버 시 배경 */
+.cabbage-table tr:hover {
+    background-color: #eef8e5;
+}
+
+.page-title {
+    text-align: center;
+    margin-top: 5px;  
+    margin-bottom: 20px;  /* 👈 아래 여백도 조절 가능 */
+    font-size: 25px;
+    font-weight: bold;
+    color: #2d2d2d;
+}
+
+.onion-table {
+    width: 85.5%;
+    border-collapse: collapse;
+    font-size: 16px;
+    text-align: center;
+    background-color: #fefefe;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.onion-table th {
+    background-color: #f7c87a;
+    color: white;
+    padding: 12px;
+}
+
+.onion-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.onion-table tr:nth-child(even) {
+    background-color: #fdf7ec;
+}
+
+.onion-table tr:hover {
+    background-color: #f5ead3;
+}
+
+.onion-pagination {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.onion-pagination a {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 8px 14px;
+    background-color: #fef1dc;
+    color: #a56900;
+    border-radius: 6px;
+    border: 1px solid #f0d5a4;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.onion-pagination a:hover {
+    background-color: #f9d693;
+    border-color: #e1b76b;
+    color: #8c5700;
+}
+
+.onion-pagination a.active {
+    background-color: #f1b44c;
+    color: white;
+    border-color: #f1b44c;
     font-weight: bold;
     pointer-events: none;
 }

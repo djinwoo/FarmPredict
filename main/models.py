@@ -62,3 +62,32 @@ class Soildata(models.Model):
 
     def __str__(self):
         return f"{self.year} {self.sido} {self.sigungu} {self.eupmyeondong} {self.ph} {self.organic_matter} {self.available_phosphorus} {self.potassium} {self.calcium} {self.magnesium} {self.nitrogen} {self.latitude} {self.longitude}"
+    
+class Cabbage(models.Model):
+    region = models.CharField(max_length=50, db_column='region',primary_key=True)  # 시도
+    year = models.IntegerField(db_column='year')                  # 연도
+    yield_per_10a = models.FloatField(db_column='yield_per_10a')  # 10a당 생산량(kg)
+    total_production = models.FloatField(db_column='total_production')  # 총 생산량(톤)
+
+    class Meta:
+        db_table = "cabbage_production"  # 테이블 이름
+        managed = False
+
+    def __str__(self):
+        return f"[{self.year}] {self.region} - 10a당: {self.yield_per_10a}kg / 총: {self.total_production}톤"
+
+
+    
+class Onion(models.Model):
+    region = models.CharField(max_length=50, db_column='region',primary_key=True)  # 시도
+    year = models.IntegerField(db_column='year')                  # 연도
+    yield_per_10a = models.FloatField(db_column='yield_per_10a')  # 10a당 생산량(kg)
+    total_production = models.FloatField(db_column='total_production')  # 총 생산량(톤)
+
+    class Meta:
+        db_table = "onion_production"
+        managed = False
+
+    def __str__(self):
+        return f"[{self.year}] {self.region} - 10a당: {self.yield_per_10a}kg / 총: {self.total_production}톤"
+

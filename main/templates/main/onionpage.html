@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<h2 class="page-title">양파 생산량 통계</h2>
+
+{% if onion_data %}
+    <table class="onion-table">
+        <thead>
+            <tr>
+                <th>시도</th>
+                <th>연도</th>
+                <th>10a당 생산량 (kg)</th>
+                <th>총 생산량 (톤)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in onion_data %}
+            <tr>
+                <td>{{ item.region }}</td>
+                <td>{{ item.year }}</td>
+                <td>{{ item.yield_per_10a|floatformat:0|intcomma }}</td>
+                <td>{{ item.total_production|floatformat:0|intcomma }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <div class="onion-pagination">
+        {% for y in year_list %}
+            <a href="?page={{ forloop.counter }}"
+            class="{% if current_year|stringformat:'s' == y|stringformat:'s' %}active{% endif %}">
+            {{ forloop.counter }}
+            </a>
+        {% endfor %}
+    </div>
+
+{% else %}
+    <p style="text-align: center;">해당 연도의 양파 생산량 데이터가 없습니다.</p>
+{% endif %}
+
+{% endblock %}

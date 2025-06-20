@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,14 @@ DATABASES = {
     'climate': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "main/climate.db",
+    },
+    'cabbage': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/cabbage.db',
+    },
+    'onion': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/onion.db',
     }
 }
 # Password validation

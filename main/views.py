@@ -3,7 +3,7 @@ import os
 import json
 from django.shortcuts import render
 from pathlib import Path
-from .models import Weatherdata,Soildata,Region
+from .models import Weatherdata,Soildata,Region,Cabbage,Onion
 from django.http import JsonResponse
 # BASE_DIR 설정 (manage.py가 있는 Django 프로젝트 루트 경로)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -211,3 +211,50 @@ def get_region_context():
         'region_json': json.dumps(region_data, ensure_ascii=False),
         'emd_json': json.dumps(emd_data, ensure_ascii=False),
     }
+
+def cabbagepage(request):
+
+    return render(request, 'main/cabbagepage.html')
+
+def onionpage(request):
+
+    return render(request, 'main/onionpage.html')
+
+
+def cabbagepage(request):
+    page = int(request.GET.get('page', 1))
+
+    # 연도 리스트 (최신순)
+    year_list = Cabbage.objects.using('cabbage') \
+        .values_list('year', flat=True).distinct().order_by('-year')
+    year_list = list(year_list)
+
+    selected_year = year_list[page - 1] if page <= len(year_list) else year_list[0]
+
+    cabbage_data = Cabbage.objects.using('cabbage').filter(year=selected_year)
+
+    context = {
+        'cabbage_data': cabbage_data,
+        'year_list': year_list,
+        'current_year': selected_year,
+    }
+    return render(request, 'main/cabbagepage.html', context)
+
+def onionpage(request):
+    page = int(request.GET.get('page', 1))
+
+    year_list = Onion.objects.using('onion') \
+        .values_list('year', flat=True).distinct().order_by('-year')
+    year_list = list(year_list)
+
+    selected_year = year_list[page - 1] if page <= len(year_list) else year_list[0]
+
+    onion_data = Onion.objects.using('onion').filter(year=selected_year)
+
+    context = {
+        'onion_data': onion_data,
+        'year_list': year_list,
+        'current_year': selected_year,
+    }
+    return render(request, 'main/onionpage.html', context)
+
