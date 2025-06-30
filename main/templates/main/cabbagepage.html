@@ -6,39 +6,27 @@
 
 <h2 class="page-title">배추 생산량 통계</h2>
 
-{% if cabbage_data %}
-<table class="cabbage-table">
-    <thead>
-        <tr>
-            <th>시도</th>
-            <th>연도</th>
-            <th>10a당 생산량 (kg)</th>
-            <th>총 생산량 (톤)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in cabbage_data %}
-        <tr>
-            <td>{{ item.region }}</td>
-            <td>{{ item.year }}</td>
-            <td>{{ item.yield_per_10a|intcomma }}</td>
-            <td>{{ item.total_production|intcomma }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- 페이지네이션 (연도 기반 번호 매김) -->
-<div class="cabbage-pagination">
-    {% for y in year_list %}
-        <a href="?page={{ forloop.counter }}"
-        class="{% if current_year|stringformat:'s' == y|stringformat:'s' %}active{% endif %}">
-        {{ forloop.counter }}
-        </a>
-    {% endfor %}
+<div class="cabbage-table-wrapper"> 
+    <table class="cabbage-table">
+        <thead>
+            <tr>
+                <th>시도</th>
+                <th>연도</th>
+                <th>10a당 생산량 (kg)</th>
+                <th>총 생산량 (kg)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cabbage_data %}
+            <tr>
+                <td>{{ item.region }}</td>
+                <td>{{ item.year }}</td>
+                <td>{{ item.yield_per_10a|intcomma }}</td>
+                <td>{{ item.total_production|intcomma }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-{% else %}
-{% endif %}
 
 {% endblock %}

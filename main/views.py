@@ -12,7 +12,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, ".env"))
 
+def safe_val(value):
+    if value is None or str(value).strip().lower() in ('', 'nan'):
+        return None  # 숫자 연산 전용 처리 위해 None 반환
+    return value
 
+def safe_mul(val, factor):
+    try:
+        if val is None:
+            return '-'
+        val = float(val)
+        if val > 1e10:  # 너무 큰 값은 이상치로 간주
+            return '-'
+        return int(val * factor)
+    except (ValueError, TypeError):
+        return '-'
+
+    
 def mainpage(request):
     sido_list = Region.objects.using('default').values_list('sido', flat=True).distinct().order_by('sido')
 
@@ -222,39 +238,35 @@ def onionpage(request):
 
 
 def cabbagepage(request):
-    page = int(request.GET.get('page', 1))
+    cabbage_qs = Cabbage.objects.using('cabbage').all().order_by('-year', 'region')
 
-    # 연도 리스트 (최신순)
-    year_list = Cabbage.objects.using('cabbage') \
-        .values_list('year', flat=True).distinct().order_by('-year')
-    year_list = list(year_list)
-
-    selected_year = year_list[page - 1] if page <= len(year_list) else year_list[0]
-
-    cabbage_data = Cabbage.objects.using('cabbage').filter(year=selected_year)
+    cabbage_data = [{
+        'region': safe_val(obj.region),
+        'year': safe_val(obj.year),
+        'yield_per_10a': safe_val(obj.yield_per_10a),
+        'total_production': safe_mul(obj.total_production, 1000),
+    } for obj in cabbage_qs]
 
     context = {
         'cabbage_data': cabbage_data,
-        'year_list': year_list,
-        'current_year': selected_year,
     }
     return render(request, 'main/cabbagepage.html', context)
 
+
 def onionpage(request):
-    page = int(request.GET.get('page', 1))
+    onion_qs = Onion.objects.using('onion').all().order_by('-year', 'region')
 
-    year_list = Onion.objects.using('onion') \
-        .values_list('year', flat=True).distinct().order_by('-year')
-    year_list = list(year_list)
-
-    selected_year = year_list[page - 1] if page <= len(year_list) else year_list[0]
-
-    onion_data = Onion.objects.using('onion').filter(year=selected_year)
+    onion_data = [{
+        'region': safe_val(obj.region) or '-',
+        'year': safe_val(obj.year) or '-',
+        'yield_per_10a': safe_val(obj.yield_per_10a) or '-',
+        'total_production': safe_mul(safe_val(obj.total_production), 1000),
+    } for obj in onion_qs]
 
     context = {
         'onion_data': onion_data,
-        'year_list': year_list,
-        'current_year': selected_year,
     }
     return render(request, 'main/onionpage.html', context)
+
+
 
