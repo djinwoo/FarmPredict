@@ -31,10 +31,9 @@ body {
     left: 0px;
     width: 200px;
     height: calc(100vh - 50px);
-    background-color: #8c4a1d;
+    background-color: #4B4B4B;
     padding-top: 12px;
     padding-left: 10px;
-    z-index: 999;
     display: flex;
     flex-direction: column;
 }
@@ -336,37 +335,6 @@ form {
     margin-bottom: 10px;
 }
 
-.weather-table {
-    width: 85.5%;
-    border-collapse: collapse;
-    margin-top: 60px;
-    font-size: 18px;
-    text-align: center;
-    background-color: #fdfdfd;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    overflow: hidden;
-}  
-
-.weather-table th {
-    background-color: #b5d7f2;
-    color: white;
-    padding: 10px;
-}
-
-.weather-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.weather-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.weather-table tr:hover {
-    background-color: #f1f1f1;
-}
-
 .soil-table {
     width: 85.5%;
     border-collapse: collapse;
@@ -398,37 +366,6 @@ form {
     background-color: #f3e8db;
 }
 
-.weather-pagination {
-    text-align: center;
-    margin: 30px 0;
-}
-
-.weather-pagination a {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 8px 14px;
-    background-color: #f1f1f1;
-    color: #333;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    text-decoration: none;
-    font-size: 15px;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.weather-pagination a:hover {
-    background-color: #d0e0ff;
-    border-color: #6699ff;
-    color: #6699ff;
-}
-
-.weather-pagination a.active {
-    background-color: #b5d7f2;
-    color: white;
-    border-color: #b5d7f2;
-    font-weight: bold;
-    pointer-events: none;
-}
 .cabbage-table {
     width: 100%;
     border-collapse: collapse;
@@ -443,20 +380,15 @@ form {
 .cabbage-table th {
     position: sticky;
     top: 0;
-    background-color: #a8d08d;
+    background-color: #4E6C50 ;
     color: white;
     padding: 12px;
     z-index: 1;  /* 헤더가 스크롤 위로 올라오지 않도록 설정 */
 }
 
-/* 짝수 행 배경 */
-.cabbage-table tr:nth-child(even) {
-    background-color: #f8fbf5;
-}
-
 /* 호버 시 배경 */
 .cabbage-table tr:hover {
-    background-color: #eef8e5;
+    background-color: #F1F1F1;
 }
 
 /* 셀 기본 패딩 및 하단선 */
@@ -469,7 +401,7 @@ form {
 .cabbage-table-wrapper {
     max-height: 700px;
     overflow-y: auto;
-    margin: 40px auto;
+    margin: 20px auto;
     width: 85.5%;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -479,7 +411,7 @@ form {
 .page-title {
     text-align: center;
     margin-top: 10px;  
-    margin-bottom: 1px;  /* 👈 아래 여백도 조절 가능 */
+    margin-bottom: 10px;  /* 👈 아래 여백도 조절 가능 */
     font-size: 25px;
     font-weight: bold;
     color: #2d2d2d;
@@ -498,7 +430,7 @@ form {
 .onion-table th {
     position: sticky;
     top: 0;
-    background-color: #f7c87a;
+    background-color: #C87F3D;
     color: white;
     padding: 12px;
     z-index: 1;  /* 헤더가 스크롤 위로 올라오지 않게 */
@@ -510,22 +442,164 @@ form {
     border-bottom: 1px solid #ddd;
 }
 
-/* 짝수 행 배경색 */
-.onion-table tr:nth-child(even) {
-    background-color: #fdf7ec;
-}
 
 /* 마우스 오버 시 배경색 */
 .onion-table tr:hover {
-    background-color: #f5ead3;
+    background-color: #F1F1F1;
 }
 
 /* ✅ 스크롤 래퍼 설정 */
 .onion-table-wrapper {
     max-height: 700px;
     overflow-y: auto;        /* 세로 스크롤 */
-    margin: 40px auto;
+    margin: 20px auto;
     width: 85.5%;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+/* 🥬 Cabbage 전용 스타일 */
+.year-filter-form-cabbage {
+    text-align: center;
+    font-size: 20px;
+}
+.year-filter-group-cabbage {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+.year-filter-form-cabbage button {
+    font-size: 18px;
+    padding: 6px 14px;
+    background-color: #4E6C50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.year-filter-form-cabbage button:hover {
+    background-color: #5D7F5C;
+}
+
+
+/* 🧅 Onion 전용 스타일 */
+.year-filter-form-onion {
+    text-align: center;
+    font-size: 20px;
+}
+.year-filter-group-onion {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+.year-filter-form-onion button {
+    font-size: 18px;
+    padding: 6px 14px;
+    background-color: #C87F3D;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.year-filter-form-onion button:hover {
+    background-color: #E9A061;
+}
+
+.weather-table-wrapper {
+    max-height: 650px; /* ✅ 원하는 높이로 조절 (예: 600px) */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 20px auto;
+    width: 90%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+}
+
+/* 표 스타일 */
+.weather-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+    text-align: center;
+    background-color: #fdfdfd;
+    table-layout: fixed; /* ✅ 셀 고정 폭 */
+}
+
+/* 헤더 고정 */
+.weather-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #3B679E;
+    color: white;
+    padding: 10px;
+    z-index: 1;
+}
+
+/* 일반 셀 스타일 */
+.weather-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* 호버 효과 */
+.weather-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* 🌦️ Weather 전용 스타일 */
+.year-filter-form-weather {
+    text-align: center;
+    font-size: 20px;
+}
+
+.year-filter-group-weather {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.year-filter-form-weather button {
+    font-size: 18px;
+    padding: 6px 14px;
+    background-color: #3B679E; /* 맑은 날씨 느낌의 파랑 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.year-filter-form-weather button:hover {
+    background-color: #4d88c6; /* hover 시 진한 파랑 */
+}
+
+/* 🪴 Soil 전용 스타일 */
+.year-filter-form-soil {
+    width: 100%;               /* 전체 폭 */
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding-right: 540px;       /* ✅ 오른쪽에서 살짝 떨어지게 */
+}
+
+.year-filter-group-soil {
+    display: flex;
+    gap: 10px;
+}
+
+.year-filter-form-soil button {
+    font-size: 18px;
+    padding: 6px 14px;
+    background-color: #7A5D3C; /* 흙빛 브라운 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.year-filter-form-soil button:hover {
+    background-color: #9b7653;
 }

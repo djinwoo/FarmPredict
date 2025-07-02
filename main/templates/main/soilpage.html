@@ -6,6 +6,12 @@
 <!-- ✅ 검색바 include -->
 {% include 'main/__searchbar.html' %}
 
+<form class="year-filter-form-soil">
+    <div class="year-filter-group-soil">
+        <button type="button" id="download-csv-soil">다운로드</button>
+    </div>
+</form>
+
 {% if soil_data %}
     <table class="soil-table">
         <thead>
@@ -52,5 +58,31 @@
 {% else %}
 
 {% endif %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const downloadBtn = document.getElementById("download-csv-soil");
+    if (downloadBtn) {
+        downloadBtn.addEventListener("click", function () {
+            const table = document.querySelector(".soil-table");
+            const rows = table.querySelectorAll("tr");
+            let csvContent = "\uFEFF";  // UTF-8 BOM
 
+            rows.forEach(row => {
+                const cols = row.querySelectorAll("th, td");
+                const rowData = Array.from(cols).map(col => `"${col.textContent.trim()}"`);
+                csvContent += rowData.join(",") + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", "soil_data_filtered.csv");
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+});
+</script>
 {% endblock %}

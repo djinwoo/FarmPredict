@@ -7,59 +7,117 @@
 {% include 'main/__searchbar.html' %}
 
 <!-- 표 출력 -->
-{% if weather_data %}
-    <table class="weather-table">
-        <thead>
-            <tr>
-                <th>년도</th>
-                <th>월</th>
-                <th>최고온도 (°C)</th>
-                <th>최저온도 (°C)</th>
-                <th>습도 (%)</th>
-                <th>풍속 (m/s)</th>
-                <th>일사량 (MJ/m²)</th>
-                <th>평균강수량 (mm)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for w in weather_data %}
-            <tr>
-                <td>{{ w.year }}</td>
-                <td>{{ w.month }}</td>
-                <td>{{ w.min_temp }}</td>
-                <td>{{ w.max_temp }}</td>
-                <td>{{ w.humidity }}</td>
-                <td>{{ w.wind_speed }}</td>
-                <td>{{ w.solar_radiation }}</td>
-                <td>{{ w.avg_precipitation }}</td>
-            </tr>
-            {% endfor %}
+<form method="get" class="year-filter-form-weather" id="year-form">
+    <div class="year-filter-group-weather">
+        <!-- ✅ 기존 선택된 시도/시군구/읍면동도 함께 넘기기 -->
+        <input type="hidden" name="sido" value="{{ sido }}">
+        <input type="hidden" name="sigungu" value="{{ sigungu }}">
+        <input type="hidden" name="eupmyeondong" value="{{ eupmyeondong }}">
 
-            <!-- 평균 행 -->
-            {% if weather_avg %}
-            <tr>
-                <td>{{ weather_avg.year }}</td>
-                <td>{{ weather_avg.month }}</td>
-                <td>{{ weather_avg.min_temp }}</td>
-                <td>{{ weather_avg.max_temp }}</td>
-                <td>{{ weather_avg.humidity }}</td>
-                <td>{{ weather_avg.wind_speed }}</td>
-                <td>{{ weather_avg.solar_radiation }}</td>
-                <td>{{ weather_avg.avg_precipitation }}</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
-        <div class="number-pagination weather-pagination">
+        <!-- 전체선택 체크박스 -->
+        <label class="year-checkbox">
+            <input type="checkbox" id="select-all"> 전체선택
+        </label>
+
+        <!-- 연도별 체크박스 -->
         {% for y in year_list %}
-            <a href="?sido={{ sido }}&sigungu={{ sigungu }}&eupmyeondong={{ eupmyeondong }}&page={{ forloop.counter }}"
-            class="{% if current_year|stringformat:'s' == y|stringformat:'s' %}active{% endif %}">
-            {{ forloop.counter }}
-            </a>
+            <label class="year-checkbox">
+                <input type="checkbox" class="year-checkbox-input" name="year" value="{{ y }}"
+                    {% if y in selected_years %}checked{% endif %}>
+                {{ y }}
+            </label>
         {% endfor %}
-        </div>
-{% else %}
-{% endif %}
-    
+
+        <button type="submit">검색</button>
+        <button type="button" id="download-csv">다운로드</button>
+    </div>
+</form>
+<div class="weather-table-wrapper">
+    {% if weather_data %}
+        <table class="weather-table">
+            <thead>
+                <tr>
+                    <th>년도</th>
+                    <th>월</th>
+                    <th>최고온도 (°C)</th>
+                    <th>최저온도 (°C)</th>
+                    <th>습도 (%)</th>
+                    <th>풍속 (m/s)</th>
+                    <th>일사량 (MJ/m²)</th>
+                    <th>평균강수량 (mm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in weather_data %}
+                <tr>
+                    <td>{{ w.year }}</td>
+                    <td>{{ w.month }}</td>
+                    <td>{{ w.min_temp }}</td>
+                    <td>{{ w.max_temp }}</td>
+                    <td>{{ w.humidity }}</td>
+                    <td>{{ w.wind_speed }}</td>
+                    <td>{{ w.solar_radiation }}</td>
+                    <td>{{ w.avg_precipitation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("year-form");
+    const yearCheckboxes = document.querySelectorAll(".year-checkbox-input");
+    const selectAll = document.getElementById("select-all");
+
+    // ✅ 전체선택 체크박스 기능
+    selectAll.addEventListener("change", function () {
+        yearCheckboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    yearCheckboxes.forEach(cb => {
+        cb.addEventListener("change", function () {
+            const allChecked = Array.from(yearCheckboxes).every(cb => cb.checked);
+            selectAll.checked = allChecked;
+        });
+    });
+
+    // ✅ 아무것도 안 체크하고 제출하면 경고
+    form.addEventListener("submit", function (e) {
+        const isAnyChecked = Array.from(yearCheckboxes).some(cb => cb.checked);
+        if (!isAnyChecked) {
+            e.preventDefault();
+            alert("최소 한 개 이상의 연도를 선택해야 검색할 수 있습니다.");
+        }
+    });
+
+    // ✅ CSV 다운로드 기능 추가
+    document.getElementById("download-csv").addEventListener("click", function () {
+        const table = document.querySelector(".weather-table");
+        if (!table) {
+            alert("테이블이 없습니다.");
+            return;
+        }
+
+        const rows = table.querySelectorAll("tr");
+        let csvContent = "\uFEFF";  // UTF-8 with BOM
+
+        rows.forEach(row => {
+            const cols = row.querySelectorAll("th, td");
+            const rowData = Array.from(cols).map(col => `"${col.textContent.trim()}"`);
+            csvContent += rowData.join(",") + "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.setAttribute("href", URL.createObjectURL(blob));
+        link.setAttribute("download", "weather_data_filtered.csv");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+});
+</script>
 
 {% endblock %}

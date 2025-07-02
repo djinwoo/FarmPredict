@@ -91,52 +91,27 @@ def mainpage(request):
 
     return render(request, 'main/mainpage.html', context)
 
-
 def weatherpage(request):
     context = get_region_context()
 
     sido = request.GET.get('sido')
     sigungu = request.GET.get('sigungu')
     eupmyeondong = request.GET.get('eupmyeondong')
-    page = int(request.GET.get('page', 1))
+    selected_years = request.GET.getlist('year')
 
     weather_data = []
-    year_list = []
-    selected_year = None
+    selected_years_int = []
+    year_list = list(range(2015, 2026))  # 연도 고정
 
     if sido and sigungu and eupmyeondong:
-        # ✅ 해당 지역의 모든 연도 추출 (최신순)
-        year_list = Weatherdata.objects.using('climate') \
-            .filter(sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong) \
-            .values_list('year', flat=True).distinct().order_by('-year')
+        base_qs = Weatherdata.objects.using('climate') \
+            .filter(sido=sido, sigungu=sigungu, eupmyeondong=eupmyeondong)
 
-        year_list = list(year_list)
-        if page <= len(year_list):
-            selected_year = year_list[page - 1]  # 페이지 번호에 맞는 연도 선택
+        if selected_years:
+            selected_years_int = list(map(int, selected_years))
+            base_qs = base_qs.filter(year__in=selected_years_int)  # ✅ 필드명 수정
 
-            weather_data = Weatherdata.objects.using('climate').filter(
-                sido=sido,
-                sigungu=sigungu,
-                eupmyeondong=eupmyeondong,
-                year=selected_year
-            ).order_by('month')
-
-            # ✅ 평균 계산
-            if weather_data:
-                fields = ['min_temp', 'max_temp', 'humidity', 'wind_speed', 'solar_radiation', 'avg_precipitation']
-                averages = {}
-                for field in fields:
-                    values = [
-                        float(getattr(w, field))
-                        for w in weather_data
-                        if getattr(w, field) is not None and str(getattr(w, field)).replace('.', '', 1).replace('-', '', 1).isdigit()
-                    ]
-                    avg = round(sum(values) / len(values), 2) if values else None
-                    averages[field] = avg
-
-                averages['year'] = selected_year
-                averages['month'] = '평균'
-                context['weather_avg'] = averages
+        weather_data = base_qs.order_by('-year', 'month')
 
     context.update({
         'sido': sido,
@@ -144,11 +119,12 @@ def weatherpage(request):
         'eupmyeondong': eupmyeondong,
         'weather_data': weather_data,
         'year_list': year_list,
-        'current_page': page,
-        'current_year': selected_year,
+        'selected_years': selected_years_int,
     })
 
     return render(request, 'main/weatherpage.html', context)
+
+
 
 def soilpage(request):
     context = get_region_context()
@@ -236,9 +212,15 @@ def onionpage(request):
 
     return render(request, 'main/onionpage.html')
 
-
 def cabbagepage(request):
-    cabbage_qs = Cabbage.objects.using('cabbage').all().order_by('-year', 'region')
+    selected_years = request.GET.getlist('year')  # ?year=2018&year=2020 형태로 받기
+
+    # 🔍 연도 필터링 조건 추가
+    if selected_years:
+        selected_years = list(map(int, selected_years))
+        cabbage_qs = Cabbage.objects.using('cabbage').filter(year__in=selected_years).order_by('-year', 'region')
+    else:
+        cabbage_qs = Cabbage.objects.using('cabbage').all().order_by('-year', 'region')
 
     cabbage_data = [{
         'region': safe_val(obj.region),
@@ -247,14 +229,25 @@ def cabbagepage(request):
         'total_production': safe_mul(obj.total_production, 1000),
     } for obj in cabbage_qs]
 
+    # 🔢 연도 리스트 (2013~2024 하드코딩 or DB에서 추출 가능)
+    year_list = list(range(2013, 2025))
+
     context = {
         'cabbage_data': cabbage_data,
+        'year_list': year_list,
+        'selected_years': selected_years,
     }
     return render(request, 'main/cabbagepage.html', context)
 
-
 def onionpage(request):
-    onion_qs = Onion.objects.using('onion').all().order_by('-year', 'region')
+    selected_years = request.GET.getlist('year')  # ?year=2018&year=2020 형태로 받기
+
+    # 🔍 연도 필터링 조건 추가
+    if selected_years:
+        selected_years = list(map(int, selected_years))
+        onion_qs = Onion.objects.using('onion').filter(year__in=selected_years).order_by('-year', 'region')
+    else:
+        onion_qs = Onion.objects.using('onion').all().order_by('-year', 'region')
 
     onion_data = [{
         'region': safe_val(obj.region) or '-',
@@ -263,10 +256,15 @@ def onionpage(request):
         'total_production': safe_mul(safe_val(obj.total_production), 1000),
     } for obj in onion_qs]
 
+    year_list = list(range(2015, 2025))  # 연도 리스트
+
     context = {
         'onion_data': onion_data,
+        'year_list': year_list,
+        'selected_years': selected_years,
     }
     return render(request, 'main/onionpage.html', context)
+
 
 
 
