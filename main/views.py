@@ -205,14 +205,6 @@ def get_region_context():
     }
 
 def cabbagepage(request):
-
-    return render(request, 'main/cabbagepage.html')
-
-def onionpage(request):
-
-    return render(request, 'main/onionpage.html')
-
-def cabbagepage(request):
     selected_years = request.GET.getlist('year')  # ?year=2018&year=2020 형태로 받기
 
     # 🔍 연도 필터링 조건 추가

@@ -35,7 +35,7 @@ class Weatherdata(models.Model):
     avg_precipitation = models.FloatField(db_column="강수량")
 
     class Meta:
-        db_table = "Sheet1"  # SQLite의 'test' 테이블과 매칭
+        db_table = "climatedata"  # SQLite의 'climate' 테이블과 매칭
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
     def __str__(self):
@@ -64,13 +64,13 @@ class Soildata(models.Model):
         return f"{self.year} {self.sido} {self.sigungu} {self.eupmyeondong} {self.ph} {self.organic_matter} {self.available_phosphorus} {self.potassium} {self.calcium} {self.magnesium} {self.nitrogen} {self.latitude} {self.longitude}"
     
 class Cabbage(models.Model):
-    region = models.CharField(max_length=50, db_column='region',primary_key=True)  # 시도
-    year = models.IntegerField(db_column='year')                  # 연도
-    yield_per_10a = models.FloatField(db_column='yield_per_10a')  # 10a당 생산량(kg)
-    total_production = models.FloatField(db_column='total_production')  # 총 생산량(톤)
+    region = models.CharField(max_length=50, db_column='시도',primary_key=True)  # 시도
+    year = models.IntegerField(db_column='년')                  # 연도
+    yield_per_10a = models.FloatField(db_column='10a당 생산량(kg)')  # 10a당 생산량(kg)
+    total_production = models.FloatField(db_column='생산량(kg)')  # 총 생산량(톤)
 
     class Meta:
-        db_table = "cabbage_production"  # 테이블 이름
+        db_table = "cabbagedata"  # 테이블 이름
         managed = False
 
     def __str__(self):
@@ -79,13 +79,13 @@ class Cabbage(models.Model):
 
     
 class Onion(models.Model):
-    region = models.CharField(max_length=50, db_column='region',primary_key=True)  # 시도
-    year = models.IntegerField(db_column='year')                  # 연도
-    yield_per_10a = models.FloatField(db_column='yield_per_10a')  # 10a당 생산량(kg)
-    total_production = models.FloatField(db_column='total_production')  # 총 생산량(톤)
+    region = models.CharField(max_length=50, db_column='시도',primary_key=True)  # 시도
+    year = models.IntegerField(db_column='년')                  # 연도
+    yield_per_10a = models.FloatField(db_column='10a당 생산량(kg)')  # 10a당 생산량(kg)
+    total_production = models.FloatField(db_column='생산량(kg)')  # 총 생산량(톤)
 
     class Meta:
-        db_table = "onion_production"
+        db_table = "oniondata"
         managed = False
 
     def __str__(self):

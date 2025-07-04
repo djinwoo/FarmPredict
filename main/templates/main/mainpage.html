@@ -62,7 +62,7 @@
                 
                     <div class="weather-row">
                         <img src="{% static 'images/T5-icon.svg' %}" alt="강수량" class="weather-icon">
-                        <p class="weather-text">강수량 : 
+                        <p class="weather-text">월합 강수량 : 
                             <a href="{% url 'main:weatherpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                             {{ weather.avg_precipitation }}
                             </a>
@@ -118,7 +118,7 @@
                         <a href="{% url 'main:soilpage' %}?sido={{ request.GET.sido }}&sigungu={{ request.GET.sigungu }}&eupmyeondong={{ request.GET.eupmyeondong }}">
                         {{ soil.nitrogen }}
                         </a>
-                        
+                        g/kg
                     </p>
                 </div>
             </div>

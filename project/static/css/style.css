@@ -358,12 +358,8 @@ form {
     border-bottom: 1px solid #e6d4ba;
 }
 
-.soil-table tr:nth-child(even) {
-    background-color: #fefaf4;
-}
-
 .soil-table tr:hover {
-    background-color: #f3e8db;
+    background-color: #F1F1F1;
 }
 
 .cabbage-table {
