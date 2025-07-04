@@ -25,6 +25,9 @@
             <li><img src="{% static 'images/Temperature-icon.svg' %}" width="24"><a href="{% url 'main:soilpage' %}">토양데이터</a></li>
             <li><img src="{% static 'images/cabbage.svg' %}" width="24"><a href="{% url 'main:cabbagepage' %}">배추데이터</a></li>
             <li><img src="{% static 'images/onion.svg' %}" width="24"><a href="{% url 'main:onionpage' %}">양파데이터</a></li>
+
+            <li class="menu-title">예측 시스템</li>
+            <li><img src="{% static 'images/forecast.svg' %}" width="24"><a href="{% url 'main:forecastpage' %}">예측조건설정</a></li>
         </ul>
     </nav>
 

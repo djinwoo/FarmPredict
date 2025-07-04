@@ -10,6 +10,7 @@ urlpatterns = [
     path('soilpage/', soilpage, name="soilpage"),
     path('cabbagepage/', cabbagepage, name="cabbagepage"),
     path('onionpage/', onionpage, name="onionpage"),
+    path('forecastpage/', forecastpage, name="forecastpage"),
     path('get-sigungu/', views.get_sigungu, name='get_sigungu'),
     path('get-eupmyeondong/', views.get_eupmyeondong, name='get_eupmyeondong'),
 ]

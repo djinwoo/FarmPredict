@@ -257,6 +257,8 @@ def onionpage(request):
     }
     return render(request, 'main/onionpage.html', context)
 
+def forecastpage(request):
+    return render(request, 'main/forecastpage.html')
 
 
 
