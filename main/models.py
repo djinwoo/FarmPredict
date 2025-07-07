@@ -27,6 +27,7 @@ class Weatherdata(models.Model):
     sido = models.CharField(max_length=100, db_column="시도")
     sigungu = models.CharField(max_length=100, db_column="시군구")
     eupmyeondong = models.CharField(max_length=100, db_column="읍면동")
+    avg_temp = models.FloatField(db_column="평균기온")
     min_temp = models.FloatField(db_column="최고기온")
     max_temp = models.FloatField(db_column="최저기온")
     humidity = models.FloatField(db_column="습도")
@@ -39,7 +40,7 @@ class Weatherdata(models.Model):
         managed = False  # Django가 테이블을 관리하지 않도록 설정
 
     def __str__(self):
-        return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation}"
+        return f"{self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.avg_temp} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation}"
 
 class Soildata(models.Model):
     year = models.IntegerField(db_column="년",primary_key=True)

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<h2 class="page-title">배추 생산량 예측하기</h2>
+
+<form method="get" class="filter-form" id="filter-form">
+<div class="filter-box">
+
+    <!-- 🔷 시도 단일 선택 -->
+    <div class="sido-section">
+    <div class="sido-checkboxes">
+        {% for sido in sido_list %}
+        <label>
+            <input type="checkbox" name="sido" value="{{ sido }}" class="sido-check"
+                {% if sido == selected_sido %}checked{% endif %}>
+            {{ sido }}
+        </label>
+        {% endfor %}
+    </div>
+    </div>
+
+    <hr class="filter-divider">
+
+    <!-- 🔷 연도 단일 선택 -->
+    <div class="year-section">
+        <div class="year-filter-row">
+        {% for year in year_list %}
+        <label>
+        <input type="checkbox" name="year" value="{{ year }}" class="year-check"
+                {% if year|stringformat:"s" == selected_year %}checked{% endif %}>
+        {{ year }}
+        </label>
+        {% endfor %}
+
+        <!-- 검색 버튼 바로 이어붙이기 -->
+        <button type="submit" class="inline-search-button">검색</button>
+        </div>
+    </div>
+
+</div>
+</form>
+
+<!-- ✅ 단일 선택 스크립트 -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+const form = document.getElementById("filter-form");
+
+  // 시도 단일 선택
+const sidoChecks = document.querySelectorAll(".sido-check");
+sidoChecks.forEach(cb => {
+    cb.addEventListener("change", function () {
+    sidoChecks.forEach(box => {
+        if (box !== this) box.checked = false;
+    });
+    });
+});
+
+  // 연도 단일 선택
+const yearChecks = document.querySelectorAll(".year-check");
+yearChecks.forEach(cb => {
+    cb.addEventListener("change", function () {
+    yearChecks.forEach(box => {
+        if (box !== this) box.checked = false;
+    });
+    });
+});
+
+  // 필수 체크 확인
+form.addEventListener("submit", function (e) {
+    const sidoSelected = Array.from(sidoChecks).some(cb => cb.checked);
+    const yearSelected = Array.from(yearChecks).some(cb => cb.checked);
+    if (!sidoSelected || !yearSelected) {
+    e.preventDefault();
+    alert("시도와 연도 중 하나라도 선택되지 않았습니다.");
+    }
+});
+
+</script>
+
+{% endblock %}

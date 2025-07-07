@@ -257,8 +257,39 @@ def onionpage(request):
     }
     return render(request, 'main/onionpage.html', context)
 
-def forecastpage(request):
-    return render(request, 'main/forecastpage.html')
+def cabbageforecast(request):
+    selected_sido = request.GET.get('sido')
+    selected_year = request.GET.get('year')
 
+    # 전체 queryset
+    qs = Cabbage.objects.using('cabbage').all()
+
+    # 필터링
+    if selected_sido:
+        qs = qs.filter(region=selected_sido)
+    if selected_year:
+        qs = qs.filter(year=int(selected_year))
+
+    qs = qs.order_by('-year', 'region')
+
+    cabbage_data = [{
+        'region': safe_val(obj.region),
+        'year': safe_val(obj.year),
+        'yield_per_10a': safe_val(obj.yield_per_10a),
+        'total_production': safe_mul(obj.total_production, 1000),
+    } for obj in qs]
+
+    context = {
+        'sido_list': ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남"],
+        'year_list': list(range(2015, 2025)),
+        'selected_sido': selected_sido,
+        'selected_year': selected_year,
+        'cabbage_data': cabbage_data,
+    }
+    return render(request, 'main/cabbageforecast.html', context)
+
+
+def onionforecast(request):
+    return render(request, 'main/onionforecast.html')
 
 

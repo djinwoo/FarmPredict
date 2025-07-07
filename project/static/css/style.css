@@ -111,7 +111,6 @@ form {
     padding: 10px 22px;
     margin-top: 20px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* 📊 데이터 & 지도 컨테이너 */
@@ -574,11 +573,9 @@ form {
 }
 
 /* 🪴 Soil 전용 스타일 */
-.year-filter-form-soil {
-    width: 100%;               /* 전체 폭 */
+.year-filter-form-soil {             /* 전체 폭 */
     display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    padding-right: 540px;       /* ✅ 오른쪽에서 살짝 떨어지게 */
+    justify-content: flex-end; /* 오른쪽 정렬 */   /* ✅ 오른쪽에서 살짝 떨어지게 */
 }
 
 .year-filter-group-soil {
@@ -598,4 +595,53 @@ form {
 
 .year-filter-form-soil button:hover {
     background-color: #9b7653;
+}
+
+/* 📦 필터 전체 회색 박스 */
+.filter-box {
+    background: #EDEDED;
+    padding: 24px 30px;
+    border-radius: 10px;
+    width: 83%;
+    max-width: 1600px;
+    margin: 20px auto;
+    flex-direction: column;
+}
+
+/* 🟦 시도 체크박스 2줄 (8열) */
+.sido-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px 16px;
+}
+
+/* 🟨 연도 체크박스 + 검색 버튼 (한 줄, 13칸) */
+.year-filter-row {
+    display: grid;
+    grid-template-columns: repeat(12, auto) auto; /* 12년 + 검색 */
+    gap: 18px 16px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* 🟩 검색 버튼 */
+.inline-search-button {
+    padding: 6px 16px;
+    background-color: #3B3F45;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 32px;
+}
+
+.inline-search-button:hover {
+    background-color: #2A2D31 ;
+}
+
+/* 🔻 구분선 */
+.filter-divider {
+    border: none;
+    border-top: 1.5px solid #aaa;
+    margin: 10px 0;
 }
