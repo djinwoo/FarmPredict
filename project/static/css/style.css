@@ -596,8 +596,7 @@ form {
 .year-filter-form-soil button:hover {
     background-color: #9b7653;
 }
-
-/* 📦 필터 전체 회색 박스 */
+/* 회색 필터 박스 */
 .filter-box {
     background: #EDEDED;
     padding: 24px 30px;
@@ -606,25 +605,45 @@ form {
     max-width: 1600px;
     margin: 20px auto;
     flex-direction: column;
+    text-align: center;
 }
 
-/* 🟦 시도 체크박스 2줄 (8열) */
+/* 시도 체크박스 - 2줄, 8열 */
 .sido-checkboxes {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 8px 16px;
 }
 
-/* 🟨 연도 체크박스 + 검색 버튼 (한 줄, 13칸) */
+/* 연도 필터 - 12개 */
 .year-filter-row {
     display: grid;
-    grid-template-columns: repeat(12, auto) auto; /* 12년 + 검색 */
+    grid-template-columns: repeat(12, auto);
     gap: 18px 16px;
     align-items: center;
     margin-top: 10px;
 }
 
-/* 🟩 검색 버튼 */
+/* 🔄 질소 입력 필터 + 검색 버튼 */
+.nitrogen-filter-row {
+    display: flex;                /* ✅ 그리드 대신 플렉스로 변경 */
+    justify-content: center;     /* ✅ 가운데 정렬 */
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+/* 질소 입력창 */
+.nitrogen-input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    height: 32px;
+    width: 160px;  /* ✅ 고정 너비로 변경 */
+    background-color: white;
+}
+
+/* 검색 버튼 */
 .inline-search-button {
     padding: 6px 16px;
     background-color: #3B3F45;
@@ -633,15 +652,36 @@ form {
     border-radius: 6px;
     cursor: pointer;
     height: 32px;
+    width: 80px; /* ✅ 고정 너비 설정 */
+    text-align: center;
 }
 
 .inline-search-button:hover {
-    background-color: #2A2D31 ;
+    background-color: #2A2D31;
 }
 
-/* 🔻 구분선 */
+/* 구분선 */
 .filter-divider {
     border: none;
     border-top: 1.5px solid #aaa;
     margin: 10px 0;
+}
+
+/* 기상 데이터 테이블 */
+.weatherforecast-table {
+    width: 88%;
+    margin: 30px auto;
+    border-collapse: collapse;
+}
+
+.weatherforecast-table th,
+.weatherforecast-table td {
+    border: 1px solid #ccc;
+    padding: 10px 12px;       /* ✅ 여백 추가 */
+    height: 44px;             /* ✅ 높이 강제 통일 */
+}
+
+.weatherforecast-table th {
+    background-color: #f6f6f6;
+    font-weight: bold;
 }

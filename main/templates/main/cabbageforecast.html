@@ -3,81 +3,99 @@
 {% load humanize %}
 
 {% block content %}
-
 <h2 class="page-title">배추 생산량 예측하기</h2>
 
-<form method="get" class="filter-form" id="filter-form">
-<div class="filter-box">
+<!-- 🔍 필터 폼 (시도‧연도‧질소) -->
+<form method="get" id="filter-form">
+    <div class="filter-box">
 
-    <!-- 🔷 시도 단일 선택 -->
-    <div class="sido-section">
+    <!-- 시도 단일 선택 -->
     <div class="sido-checkboxes">
         {% for sido in sido_list %}
-        <label>
-            <input type="checkbox" name="sido" value="{{ sido }}" class="sido-check"
-                {% if sido == selected_sido %}checked{% endif %}>
+            <label>
+            <input type="checkbox" class="sido-check"
+                    name="sido" value="{{ sido }}"
+                    {% if sido == selected_sido %}checked{% endif %}>
             {{ sido }}
-        </label>
+            </label>
         {% endfor %}
-    </div>
     </div>
 
     <hr class="filter-divider">
 
-    <!-- 🔷 연도 단일 선택 -->
-    <div class="year-section">
-        <div class="year-filter-row">
+    <!-- 연도 단일 선택 -->
+    <div class="year-filter-row">
         {% for year in year_list %}
-        <label>
-        <input type="checkbox" name="year" value="{{ year }}" class="year-check"
-                {% if year|stringformat:"s" == selected_year %}checked{% endif %}>
-        {{ year }}
-        </label>
+            <label>
+            <input type="checkbox" class="year-check"
+                    name="year" value="{{ year }}"
+                    {% if year|stringformat:"s" == selected_year %}checked{% endif %}>
+            {{ year }}
+            </label>
         {% endfor %}
+    </div>
 
-        <!-- 검색 버튼 바로 이어붙이기 -->
+    <hr class="filter-divider">
+
+    <!-- 질소 입력 + 검색 버튼 -->
+    <div class="nitrogen-filter-row">
+        <input type="number" name="nitrogen"
+                step="0.01" min="0"
+                class="nitrogen-input"
+                placeholder="질소값 (예: 0.25)"
+                value="{{ nitrogen|default:'' }}">
         <button type="submit" class="inline-search-button">검색</button>
         </div>
     </div>
-
-</div>
 </form>
+
+<!-- 결과 테이블 (폼 밖) -->
+<table class="weatherforecast-table">
+    <thead>
+        <tr>
+        <th>평균기온 (℃)</th>
+        <th>평균습도 (%)</th>
+        <th>평균풍속 (m/s)</th>
+        <th>평균일사량 (MJ/㎡)</th>
+        <th>평균강수량 (mm)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td>{{ weather_stats.avg_temp }}</td>
+        <td>{{ weather_stats.humidity }}</td>
+        <td>{{ weather_stats.wind_speed }}</td>
+        <td>{{ weather_stats.solar_radiation }}</td>
+        <td>{{ weather_stats.avg_precipitation }}</td>
+        </tr>
+    </tbody>
+</table>
 
 <!-- ✅ 단일 선택 스크립트 -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-const form = document.getElementById("filter-form");
-
-  // 시도 단일 선택
-const sidoChecks = document.querySelectorAll(".sido-check");
-sidoChecks.forEach(cb => {
-    cb.addEventListener("change", function () {
-    sidoChecks.forEach(box => {
-        if (box !== this) box.checked = false;
+document.addEventListener('DOMContentLoaded', () => {
+  // 하나만 선택되도록 제어
+    document.querySelectorAll('.sido-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+        if (cb.checked) {
+            document.querySelectorAll('.sido-check').forEach(o => { if (o !== cb) o.checked = false; });
+        }
+        });
     });
-    });
-});
-
-  // 연도 단일 선택
-const yearChecks = document.querySelectorAll(".year-check");
-yearChecks.forEach(cb => {
-    cb.addEventListener("change", function () {
-    yearChecks.forEach(box => {
-        if (box !== this) box.checked = false;
-    });
+    document.querySelectorAll('.year-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+        if (cb.checked) {
+            document.querySelectorAll('.year-check').forEach(o => { if (o !== cb) o.checked = false; });
+        }
+        });
     });
 });
 
-  // 필수 체크 확인
-form.addEventListener("submit", function (e) {
-    const sidoSelected = Array.from(sidoChecks).some(cb => cb.checked);
-    const yearSelected = Array.from(yearChecks).some(cb => cb.checked);
-    if (!sidoSelected || !yearSelected) {
-    e.preventDefault();
-    alert("시도와 연도 중 하나라도 선택되지 않았습니다.");
+// 새로고침(F5) 시 파라미터 제거해 초기화
+window.addEventListener('pageshow', e => {
+    if (e.persisted || (performance && performance.navigation.type === 1)) {
+    window.location.replace('/cabbageforecast/');
     }
 });
-
 </script>
-
 {% endblock %}

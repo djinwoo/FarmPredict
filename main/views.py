@@ -28,7 +28,6 @@ def safe_mul(val, factor):
     except (ValueError, TypeError):
         return '-'
 
-    
 def mainpage(request):
     sido_list = Region.objects.using('default').values_list('sido', flat=True).distinct().order_by('sido')
 
@@ -124,8 +123,6 @@ def weatherpage(request):
 
     return render(request, 'main/weatherpage.html', context)
 
-
-
 def soilpage(request):
     context = get_region_context()
 
@@ -175,7 +172,6 @@ def get_sigungu(request):
     sido = request.GET.get('sido')
     sigungu_list = Region.objects.using('default').filter(sido=sido).values_list('sigungu', flat=True).distinct().order_by('sigungu')
     return JsonResponse({'sigungu_list': list(sigungu_list)})
-
 
 def get_eupmyeondong(request):
     sido = request.GET.get('sido')
@@ -257,34 +253,81 @@ def onionpage(request):
     }
     return render(request, 'main/onionpage.html', context)
 
+def parse_float_safe(val):
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return None
+
+def f_list(qs, attr):
+    """qs에서 attr을 float 변환해 유효값만 리스트로 리턴"""
+    return [
+        v for v in
+        (parse_float_safe(getattr(o, attr)) for o in qs)
+        if v is not None
+    ]
+
 def cabbageforecast(request):
-    selected_sido = request.GET.get('sido')
-    selected_year = request.GET.get('year')
+    # ─── ① GET 파라미터 ─────────────────────────
+    selected_sido  = request.GET.get('sido')
+    selected_year  = request.GET.get('year')
+    nitrogen       = request.GET.get('nitrogen')
 
-    # 전체 queryset
+    # ─── ② 배추 데이터 필터 ──────────────────────
     qs = Cabbage.objects.using('cabbage').all()
-
-    # 필터링
     if selected_sido:
         qs = qs.filter(region=selected_sido)
     if selected_year:
         qs = qs.filter(year=int(selected_year))
-
     qs = qs.order_by('-year', 'region')
 
     cabbage_data = [{
-        'region': safe_val(obj.region),
-        'year': safe_val(obj.year),
-        'yield_per_10a': safe_val(obj.yield_per_10a),
-        'total_production': safe_mul(obj.total_production, 1000),
-    } for obj in qs]
+        'region': safe_val(o.region),
+        'year':   safe_val(o.year),
+        'yield_per_10a':   safe_val(o.yield_per_10a),
+        'total_production': safe_mul(o.total_production, 1000),
+    } for o in qs]
 
+    # ─── ③ 기상 평균 계산 ────────────────────────
+    weather_stats = {'avg_temp': '-', 'humidity': '-', 'wind_speed': '-',
+                        'solar_radiation': '-', 'avg_precipitation': '-',
+                        'nitrogen': nitrogen or ''}
+
+    if selected_sido and selected_year:
+        wqs = Weatherdata.objects.using('climate').filter(
+                    year=int(selected_year), sido=selected_sido)
+
+        if wqs.exists():
+            temps   = f_list(wqs, 'avg_temp')
+            hums    = f_list(wqs, 'humidity')
+            winds   = f_list(wqs, 'wind_speed')
+            solars  = f_list(wqs, 'solar_radiation')
+            precs   = f_list(wqs, 'avg_precipitation')
+
+            weather_stats = {
+                'avg_temp':          round(sum(temps)  / len(temps),  2) if temps  else 0,
+                'humidity':          round(sum(hums)   / len(hums),   2) if hums   else 0,
+                'wind_speed':        round(sum(winds)  / len(winds),  2) if winds  else 0,
+                'solar_radiation':   round(sum(solars) / len(solars), 2) if solars else 0,
+                'avg_precipitation': round(sum(precs)  / len(precs),  2) if precs  else 0,
+                'nitrogen': nitrogen or ""
+            }           
+
+    # ─── ④ 체크박스 옵션은 DB에서 동적 추출 ───────
+    sido_list = Weatherdata.objects.using('climate') \
+                    .values_list('sido', flat=True).distinct().order_by('sido')
+    year_list = Weatherdata.objects.using('climate') \
+                    .values_list('year', flat=True).distinct().order_by('year')
+
+    # ─── ⑤ context & 렌더 ────────────────────────
     context = {
-        'sido_list': ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남"],
-        'year_list': list(range(2015, 2025)),
-        'selected_sido': selected_sido,
-        'selected_year': selected_year,
-        'cabbage_data': cabbage_data,
+        'sido_list':       sido_list,
+        'year_list':       year_list,
+        'selected_sido':   selected_sido,
+        'selected_year':   selected_year,
+        'cabbage_data':    cabbage_data,
+        'weather_stats':   weather_stats,
+        'nitrogen':        nitrogen or ''
     }
     return render(request, 'main/cabbageforecast.html', context)
 
