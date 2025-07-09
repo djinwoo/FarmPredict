@@ -30,11 +30,23 @@
             <li><img src="{% static 'images/forecast.svg' %}" width="24"><a href="{% url 'main:cabbageforecast' %}">배추예측량</a></li>
             <li><img src="{% static 'images/forecast.svg' %}" width="24"><a href="{% url 'main:onionforecast' %}">양파예측량</a></li>
         </ul>
+        <footer class="dongguk-footer">
+            <div class="dongguk-container">
+                <img src="{% static 'images/dongguk.svg' %}" alt="동국대학교 로고" class="dongguk-logo">
+                <div class="dongguk-text-group">
+                    <div class="dongguk-powered">Made by 동국대학교</div>
+                    <div class="dongguk-lab">SBO연구실</div>
+                </div>
+            </div>
+        </footer>
+
+
     </nav>
 
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
+    
 </body>
 </html>

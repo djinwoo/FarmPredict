@@ -305,14 +305,45 @@ def cabbageforecast(request):
             precs   = f_list(wqs, 'avg_precipitation')
 
             weather_stats = {
-                'avg_temp':          round(sum(temps)  / len(temps),  2) if temps  else 0,
-                'humidity':          round(sum(hums)   / len(hums),   2) if hums   else 0,
-                'wind_speed':        round(sum(winds)  / len(winds),  2) if winds  else 0,
-                'solar_radiation':   round(sum(solars) / len(solars), 2) if solars else 0,
-                'avg_precipitation': round(sum(precs)  / len(precs),  2) if precs  else 0,
+                'avg_temp':          round(sum(temps)  / len(temps),  2) if temps  else "-",
+                'humidity':          round(sum(hums)   / len(hums),   2) if hums   else "-",
+                'wind_speed':        round((sum(winds)  / len(winds)) * 3.6,  2) if winds  else "-",
+                'solar_radiation':   round(sum(solars) / (365 * (len(solars) / 12)), 2) if solars else "-",
+                'avg_precipitation': round(sum(precs)  / (365 * (len(precs) / 12)),  2) if precs  else "-",
                 'nitrogen': nitrogen or ""
             }           
 
+    prediction = None
+    actual = None
+    error_rate = None
+
+    try:
+        # 기상요인과 질소가 모두 유효할 때만 예측식 적용
+        if all([
+            weather_stats.get('avg_temp') not in [None, '-', ''],
+            weather_stats.get('humidity') not in [None, '-', ''],
+            weather_stats.get('wind_speed') not in [None, '-', ''],
+            weather_stats.get('solar_radiation') not in [None, '-', ''],
+            weather_stats.get('avg_precipitation') not in [None, '-', ''],
+            nitrogen not in [None, '', '-']
+        ]):
+            N = float(nitrogen)
+            T = float(weather_stats['avg_temp'])
+            H = float(weather_stats['humidity'])
+            W = float(weather_stats['wind_speed'])
+            S = float(weather_stats['solar_radiation'])
+            P = float(weather_stats['avg_precipitation'])
+
+            prediction = round(0.0700*N + 0.1866*T - 0.4226*H + 1.9204*W + 0.4514*S + 0.1961*P + 16.3369, 2)
+
+            # 실제값 가져오기 (해당 지역/년도 첫 값 기준)
+            if qs.exists() and qs.first().yield_per_10a:
+                actual = round(qs.first().yield_per_10a, 2)
+                error_rate = round(abs(prediction - actual) / actual * 100, 2)
+    except Exception as e:
+        print(f"[예측 계산 오류] {e}")
+        prediction = None
+    
     # ─── ④ 체크박스 옵션은 DB에서 동적 추출 ───────
     sido_list = Weatherdata.objects.using('climate') \
                     .values_list('sido', flat=True).distinct().order_by('sido')
@@ -327,7 +358,10 @@ def cabbageforecast(request):
         'selected_year':   selected_year,
         'cabbage_data':    cabbage_data,
         'weather_stats':   weather_stats,
-        'nitrogen':        nitrogen or ''
+        'nitrogen':        nitrogen or '',
+        'prediction':      prediction,
+        'actual':          actual,
+        'error_rate':      error_rate
     }
     return render(request, 'main/cabbageforecast.html', context)
 

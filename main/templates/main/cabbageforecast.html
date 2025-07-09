@@ -40,9 +40,9 @@
     <!-- 질소 입력 + 검색 버튼 -->
     <div class="nitrogen-filter-row">
         <input type="number" name="nitrogen"
-                step="0.01" min="0"
+                step="1" min="0"
                 class="nitrogen-input"
-                placeholder="질소값 (예: 0.25)"
+                placeholder="질소값 (예: 20)"
                 value="{{ nitrogen|default:'' }}">
         <button type="submit" class="inline-search-button">검색</button>
         </div>
@@ -70,6 +70,25 @@
         </tr>
     </tbody>
 </table>
+
+<!-- 🔻 예측 결과 테이블 -->
+<table class="prediction-result-table">
+    <thead>
+        <tr>
+            <th>예측값</th>
+            <th>실제값</th>
+            <th>오차율 (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ prediction|default:"-" }}</td>
+            <td>{{ actual|default:"-" }}</td>
+            <td>{{ error_rate|default:"-" }}</td>
+        </tr>
+    </tbody>
+</table>
+
 
 <!-- ✅ 단일 선택 스크립트 -->
 <script>
