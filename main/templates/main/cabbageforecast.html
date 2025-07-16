@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block content %}
-<h2 class="page-title">배추 생산량 예측하기</h2>
+<h2 class="page-title">가을배추 생산량 예측하기</h2>
 
 <!-- 🔍 필터 폼 (시도‧연도‧질소) -->
 <form method="get" id="filter-form">
@@ -55,7 +55,7 @@
         <tr>
         <th>평균기온 (℃)</th>
         <th>평균습도 (%)</th>
-        <th>평균풍속 (m/s)</th>
+        <th>평균풍속 (km/h)</th>
         <th>평균일사량 (MJ/㎡)</th>
         <th>평균강수량 (mm)</th>
         </tr>
@@ -75,8 +75,8 @@
 <table class="prediction-result-table">
     <thead>
         <tr>
-            <th>예측값</th>
-            <th>실제값</th>
+            <th>예측값 (t/ha)</th>
+            <th>실제값 (t/ha)</th>
             <th>오차율 (%)</th>
         </tr>
     </thead>

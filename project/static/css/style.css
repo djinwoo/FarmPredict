@@ -673,6 +673,7 @@ form {
     width: 88%;
     margin: 30px auto;
     border-collapse: collapse;
+    text-align: center;
 }
 
 .weatherforecast-table th,
@@ -692,6 +693,7 @@ form {
     width: 88%;
     border-collapse: collapse;
     margin-top: 30px;
+    text-align: center;
 }
 .prediction-result-table th,
 .prediction-result-table td {
@@ -706,24 +708,23 @@ form {
 }
 
 .dongguk-footer {
-    margin-top: 270px;
-    margin-left: -44px;
+    margin-top: 220px;
+    margin-left: 5px;
     text-align: center;
     color: #ddd; /* 텍스트 대비 */
     font-family: 'Noto Sans KR', sans-serif;
 }
 
 .dongguk-container {
-    display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 }
 
 .dongguk-logo {
-    width: 40px !important;
+    width: 160px !important;
     height: auto !important;
-    margin-right: 8px !important;
+    margin-left: -40px !important;
 }
 
 .dongguk-text-group {
