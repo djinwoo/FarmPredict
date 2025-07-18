@@ -284,214 +284,231 @@ SIDO_REMAP = {
 }
 
 def cabbageforecast(request):
-    # ─── ① GET 파라미터 ─────────────────────────
-    selected_sido  = request.GET.get('sido')
-    selected_year  = request.GET.get('year')
-    nitrogen       = request.GET.get('nitrogen')
-    
-    # ─── ② 배추 데이터 필터 ──────────────────────
+    # ① GET 파라미터
+    selected_sido   = request.GET.get('sido')
+    selected_year   = request.GET.get('year')
+    selected_months = request.GET.getlist('month')    # now multi-select
+    nitrogen        = request.GET.get('nitrogen')
+
+    # month_list: 1~12월
+    month_list = list(range(1,13))
+
+    # ② Onion 데이터 필터링 (region/year)
     qs = Cabbage.objects.using('cabbage').all()
     if selected_sido:
         qs = qs.filter(region=selected_sido)
     if selected_year:
         qs = qs.filter(year=int(selected_year))
-    qs = qs.order_by('-year', 'region')
+    qs = qs.order_by('-year','region')
 
-    cabbage_data = [{
+    onion_data = [{
         'region': safe_val(o.region),
         'year':   safe_val(o.year),
-        'yield_per_10a':   safe_val(o.yield_per_10a),
-        'total_production': safe_mul(o.total_production, 1000),
+        'yield_per_10a': safe_val(o.yield_per_10a),
+        'total_production': safe_mul(o.total_production,1000),
     } for o in qs]
 
-    # ─── ③ 기상 평균 계산 ────────────────────────
-    weather_stats = {'avg_temp': '-', 'humidity': '-', 'wind_speed': '-',
-                        'solar_radiation': '-', 'avg_precipitation': '-',
-                        'nitrogen': nitrogen or ''}
+    # ③ 기상 평균 계산 (month__in)
+    weather_stats = {
+        'avg_temp':'-','humidity':'-','wind_speed':'-',
+        'solar_radiation':'-','avg_precipitation':'-',
+        'nitrogen': nitrogen or ''
+    }
 
-    if selected_sido and selected_year:
+    # 정수 리스트로 바꿔서 필터
+    months_int = [int(m) for m in selected_months if m.isdigit()]
+    if selected_sido and selected_year and months_int:
         wqs = Weatherdata.objects.using('climate').filter(
-                    year=int(selected_year), sido=selected_sido)
-
+            year=int(selected_year),
+            sido=selected_sido,
+            month__in=months_int
+        )
         if wqs.exists():
-            temps   = f_list(wqs, 'avg_temp')
-            hums    = f_list(wqs, 'humidity')
-            winds   = f_list(wqs, 'wind_speed')
-            solars  = f_list(wqs, 'solar_radiation')
-            precs   = f_list(wqs, 'avg_precipitation')
-
+            temps  = f_list(wqs,'avg_temp')
+            hums   = f_list(wqs,'humidity')
+            winds  = f_list(wqs,'wind_speed')
+            solars = f_list(wqs,'solar_radiation')
+            precs  = f_list(wqs,'avg_precipitation')
             weather_stats = {
-                'avg_temp':          round(sum(temps)  / len(temps),  2) if temps  else "-",
-                'humidity':          round(sum(hums)   / len(hums),   2) if hums   else "-",
-                'wind_speed':        round((sum(winds)  / len(winds)) * 3.6,  2) if winds  else "-",
-                'solar_radiation':   round(sum(solars) / (365 * (len(solars) / 12)), 2) if solars else "-",
-                'avg_precipitation': round(sum(precs)  / (365 * (len(precs) / 12)),  2) if precs  else "-",
+                'avg_temp':          round(sum(temps)/len(temps),2) if temps else "-",
+                'humidity':          round(sum(hums)/len(hums),2) if hums else "-",
+                'wind_speed':        round((sum(winds)/len(winds))*3.6,2) if winds else "-",
+                'solar_radiation':   round(sum(solars)/(30*(len(solars))),2) if solars else "-",
+                'avg_precipitation': round(sum(precs)/(30*(len(precs))),2) if precs else "-",
                 'nitrogen': nitrogen or ""
-            }           
+            }
 
-    prediction = None
-    actual = None
-    error_rate = None
-
+    # ④ 예측·실제·오차율 계산
+    prediction = actual = error_rate = None
     try:
-        # 기상요인과 질소가 모두 유효할 때만 예측식 적용
         if all([
-            weather_stats.get('avg_temp') not in [None, '-', ''],
-            weather_stats.get('humidity') not in [None, '-', ''],
-            weather_stats.get('wind_speed') not in [None, '-', ''],
-            weather_stats.get('solar_radiation') not in [None, '-', ''],
-            weather_stats.get('avg_precipitation') not in [None, '-', ''],
-            nitrogen not in [None, '', '-']
+            weather_stats['avg_temp'] not in ['-',''],
+            weather_stats['humidity'] not in ['-',''],
+            weather_stats['wind_speed'] not in ['-',''],
+            weather_stats['solar_radiation'] not in ['-',''],
+            weather_stats['avg_precipitation'] not in ['-',''],
+            nitrogen not in [None,'','-']
         ]):
-            N = float(nitrogen)
-            T = float(weather_stats['avg_temp'])
+            N = float(nitrogen); T=float(weather_stats['avg_temp'])
             H = float(weather_stats['humidity'])
             W = float(weather_stats['wind_speed'])
             S = float(weather_stats['solar_radiation'])
             P = float(weather_stats['avg_precipitation'])
-
-            prediction = round(0.1930*N + 2.6281*T + 2.2951*H -4.9108*W + 5.4245*S -2.5028*P -113.4609, 2)
-
-            # 실제값 가져오기 (해당 지역/년도 첫 값 기준)
-            remapped = SIDO_REMAP.get(selected_sido, selected_sido)
+            prediction = round(
+                0.1930*N +2.6281*T +2.2951*H
+                -4.9108*W +5.4245*S -2.5028*P
+                -113.4609,2
+            )
+            # 실제값 조회
+            remapped = SIDO_REMAP.get(selected_sido,selected_sido)
             if remapped and selected_year:
                 actual_qs = Cabbage.objects.using('cabbage').filter(
                     region=remapped,
                     year=int(selected_year)
                 )
                 if actual_qs.exists():
-                    actual_val = actual_qs.values_list('yield_per_10a', flat=True).first()
-                    actual = round(float(actual_val)/100, 2) if actual_val is not None else None
+                    val = actual_qs.values_list('yield_per_10a',flat=True).first()
+                    actual = round(float(val)/100,2) if val is not None else None
                     if actual:
-                        error_rate = round(abs(prediction - actual)/actual*100, 2)
+                        error_rate = round(abs(prediction-actual)/actual*100,2)
     except Exception as e:
-        print(f"[예측 계산 오류] {e}")
-    
-    # ─── ④ 체크박스 옵션은 DB에서 동적 추출 ───────
-    sido_list = Weatherdata.objects.using('climate') \
-                    .values_list('sido', flat=True).distinct().order_by('sido')
-    year_list = Weatherdata.objects.using('climate') \
-                    .values_list('year', flat=True).distinct().order_by('year')
+        print(f"[예측 오류] {e}")
 
-    # ─── ⑤ context & 렌더 ────────────────────────
+    # ⑤ 체크박스 옵션 (시도, 년)
+    sido_list = Weatherdata.objects.using('climate')\
+        .values_list('sido',flat=True).distinct().order_by('sido')
+    year_list = Weatherdata.objects.using('climate')\
+        .values_list('year',flat=True).distinct().order_by('year')
+
+    # ⑥ context & render
     context = {
-        'sido_list':       sido_list,
-        'year_list':       year_list,
-        'selected_sido':   selected_sido,
-        'selected_year':   selected_year,
-        'cabbage_data':    cabbage_data,
-        'weather_stats':   weather_stats,
-        'nitrogen':        nitrogen or '',
-        'prediction':      prediction,
-        'actual':          actual,
-        'error_rate':      error_rate
+        'sido_list':      sido_list,
+        'year_list':      year_list,
+        'month_list':     month_list,
+        'selected_sido':  selected_sido,
+        'selected_year':  selected_year,
+        'selected_months':selected_months,
+        'onion_data':     onion_data,
+        'weather_stats':  weather_stats,
+        'nitrogen':       nitrogen or '',
+        'prediction':     prediction,
+        'actual':         actual,
+        'error_rate':     error_rate,
     }
-    return render(request, 'main/cabbageforecast.html', context)
-
+    return render(request,'main/cabbageforecast.html',context)
 
 def onionforecast(request):
-    # ─── ① GET 파라미터 ─────────────────────────
-    selected_sido  = request.GET.get('sido')
-    selected_year  = request.GET.get('year')
-    nitrogen       = request.GET.get('nitrogen')
-    
-    # ─── ② 배추 데이터 필터 ──────────────────────
+    # ① GET 파라미터
+    selected_sido   = request.GET.get('sido')
+    selected_year   = request.GET.get('year')
+    selected_months = request.GET.getlist('month')    # now multi-select
+    nitrogen        = request.GET.get('nitrogen')
+
+    # month_list: 1~12월
+    month_list = list(range(1,13))
+
+    # ② Onion 데이터 필터링 (region/year)
     qs = Onion.objects.using('onion').all()
     if selected_sido:
         qs = qs.filter(region=selected_sido)
     if selected_year:
         qs = qs.filter(year=int(selected_year))
-    qs = qs.order_by('-year', 'region')
+    qs = qs.order_by('-year','region')
 
-    cabbage_data = [{
+    onion_data = [{
         'region': safe_val(o.region),
         'year':   safe_val(o.year),
-        'yield_per_10a':   safe_val(o.yield_per_10a),
-        'total_production': safe_mul(o.total_production, 1000),
+        'yield_per_10a': safe_val(o.yield_per_10a),
+        'total_production': safe_mul(o.total_production,1000),
     } for o in qs]
 
-    # ─── ③ 기상 평균 계산 ────────────────────────
-    weather_stats = {'avg_temp': '-', 'humidity': '-', 'wind_speed': '-',
-                        'solar_radiation': '-', 'avg_precipitation': '-',
-                        'nitrogen': nitrogen or ''}
+    # ③ 기상 평균 계산 (month__in)
+    weather_stats = {
+        'avg_temp':'-','humidity':'-','wind_speed':'-',
+        'solar_radiation':'-','avg_precipitation':'-',
+        'nitrogen': nitrogen or ''
+    }
 
-    if selected_sido and selected_year:
+    # 정수 리스트로 바꿔서 필터
+    months_int = [int(m) for m in selected_months if m.isdigit()]
+    if selected_sido and selected_year and months_int:
         wqs = Weatherdata.objects.using('climate').filter(
-                    year=int(selected_year), sido=selected_sido)
-
+            year=int(selected_year),
+            sido=selected_sido,
+            month__in=months_int
+        )
         if wqs.exists():
-            temps   = f_list(wqs, 'avg_temp')
-            hums    = f_list(wqs, 'humidity')
-            winds   = f_list(wqs, 'wind_speed')
-            solars  = f_list(wqs, 'solar_radiation')
-            precs   = f_list(wqs, 'avg_precipitation')
-
+            temps  = f_list(wqs,'avg_temp')
+            hums   = f_list(wqs,'humidity')
+            winds  = f_list(wqs,'wind_speed')
+            solars = f_list(wqs,'solar_radiation')
+            precs  = f_list(wqs,'avg_precipitation')
             weather_stats = {
-                'avg_temp':          round(sum(temps)  / len(temps),  2) if temps  else "-",
-                'humidity':          round(sum(hums)   / len(hums),   2) if hums   else "-",
-                'wind_speed':        round((sum(winds)  / len(winds)) * 3.6,  2) if winds  else "-",
-                'solar_radiation':   round(sum(solars) / (365 * (len(solars) / 12)), 2) if solars else "-",
-                'avg_precipitation': round(sum(precs)  / (365 * (len(precs) / 12)),  2) if precs  else "-",
+                'avg_temp':          round(sum(temps)/len(temps),2) if temps else "-",
+                'humidity':          round(sum(hums)/len(hums),2) if hums else "-",
+                'wind_speed':        round((sum(winds)/len(winds))*3.6,2) if winds else "-",
+                'solar_radiation':   round(sum(solars)/(30*(len(solars))),2) if solars else "-",
+                'avg_precipitation': round(sum(precs)/(30*(len(precs))),2) if precs else "-",
                 'nitrogen': nitrogen or ""
-            }           
+            }
 
-    prediction = None
-    actual = None
-    error_rate = None
-
+    # ④ 예측·실제·오차율 계산
+    prediction = actual = error_rate = None
     try:
-        # 기상요인과 질소가 모두 유효할 때만 예측식 적용
         if all([
-            weather_stats.get('avg_temp') not in [None, '-', ''],
-            weather_stats.get('humidity') not in [None, '-', ''],
-            weather_stats.get('wind_speed') not in [None, '-', ''],
-            weather_stats.get('solar_radiation') not in [None, '-', ''],
-            weather_stats.get('avg_precipitation') not in [None, '-', ''],
-            nitrogen not in [None, '', '-']
+            weather_stats['avg_temp'] not in ['-',''],
+            weather_stats['humidity'] not in ['-',''],
+            weather_stats['wind_speed'] not in ['-',''],
+            weather_stats['solar_radiation'] not in ['-',''],
+            weather_stats['avg_precipitation'] not in ['-',''],
+            nitrogen not in [None,'','-']
         ]):
-            N = float(nitrogen)
-            T = float(weather_stats['avg_temp'])
+            N = float(nitrogen); T=float(weather_stats['avg_temp'])
             H = float(weather_stats['humidity'])
             W = float(weather_stats['wind_speed'])
             S = float(weather_stats['solar_radiation'])
             P = float(weather_stats['avg_precipitation'])
-
-            prediction = round(0.1016*N -0.1009*T -0.1267*H +0.0626*W +0.1437*S -0.0433*P +10.4367, 2)
-
-            # 실제값 가져오기 (해당 지역/년도 첫 값 기준)
-            remapped = SIDO_REMAP.get(selected_sido, selected_sido)
+            prediction = round(
+                0.1016*N -0.1009*T -0.1267*H
+                +0.0626*W +0.1437*S -0.0433*P
+                +10.4367,2
+            )
+            # 실제값 조회
+            remapped = SIDO_REMAP.get(selected_sido,selected_sido)
             if remapped and selected_year:
                 actual_qs = Onion.objects.using('onion').filter(
                     region=remapped,
                     year=int(selected_year)
                 )
                 if actual_qs.exists():
-                    actual_val = actual_qs.values_list('yield_per_10a', flat=True).first()
-                    actual = round(float(actual_val)/100, 2) if actual_val is not None else None
+                    val = actual_qs.values_list('yield_per_10a',flat=True).first()
+                    actual = round(float(val)/100,2) if val is not None else None
                     if actual:
-                        error_rate = round(abs(prediction - actual)/actual*100, 2)
+                        error_rate = round(abs(prediction-actual)/actual*100,2)
     except Exception as e:
-        print(f"[예측 계산 오류] {e}")
-    
-    # ─── ④ 체크박스 옵션은 DB에서 동적 추출 ───────
-    sido_list = Weatherdata.objects.using('climate') \
-                    .values_list('sido', flat=True).distinct().order_by('sido')
-    year_list = Weatherdata.objects.using('climate') \
-                    .values_list('year', flat=True).distinct().order_by('year')
+        print(f"[예측 오류] {e}")
 
-    # ─── ⑤ context & 렌더 ────────────────────────
+    # ⑤ 체크박스 옵션 (시도, 년)
+    sido_list = Weatherdata.objects.using('climate')\
+        .values_list('sido',flat=True).distinct().order_by('sido')
+    year_list = Weatherdata.objects.using('climate')\
+        .values_list('year',flat=True).distinct().order_by('year')
+
+    # ⑥ context & render
     context = {
-        'sido_list':       sido_list,
-        'year_list':       year_list,
-        'selected_sido':   selected_sido,
-        'selected_year':   selected_year,
-        'cabbage_data':    cabbage_data,
-        'weather_stats':   weather_stats,
-        'nitrogen':        nitrogen or '',
-        'prediction':      prediction,
-        'actual':          actual,
-        'error_rate':      error_rate
+        'sido_list':      sido_list,
+        'year_list':      year_list,
+        'month_list':     month_list,
+        'selected_sido':  selected_sido,
+        'selected_year':  selected_year,
+        'selected_months':selected_months,
+        'onion_data':     onion_data,
+        'weather_stats':  weather_stats,
+        'nitrogen':       nitrogen or '',
+        'prediction':     prediction,
+        'actual':         actual,
+        'error_rate':     error_rate,
     }
-    return render(request, 'main/onionforecast.html', context)
+    return render(request,'main/onionforecast.html',context)
 
 

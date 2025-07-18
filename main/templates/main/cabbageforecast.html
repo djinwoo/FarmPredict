@@ -5,59 +5,78 @@
 {% block content %}
 <h2 class="page-title">가을배추 생산량 예측하기</h2>
 
-<!-- 🔍 필터 폼 (시도‧연도‧질소) -->
 <form method="get" id="filter-form">
     <div class="filter-box">
 
-    <!-- 시도 단일 선택 -->
-    <div class="sido-checkboxes">
+        <!-- 🔷 시도 단일 선택 -->
+        <div class="sido-checkboxes">
         {% for sido in sido_list %}
-            <label>
+        <label>
             <input type="checkbox" class="sido-check"
-                    name="sido" value="{{ sido }}"
-                    {% if sido == selected_sido %}checked{% endif %}>
+                name="sido" value="{{ sido }}"
+                {% if sido == selected_sido %}checked{% endif %}>
             {{ sido }}
-            </label>
+        </label>
         {% endfor %}
-    </div>
+        </div>
 
-    <hr class="filter-divider">
+        <hr class="filter-divider">
 
-    <!-- 연도 단일 선택 -->
+        <!-- 🔷 월 다중 선택 -->
     <div class="year-filter-row">
-        {% for year in year_list %}
+        <!-- 전체선택 -->
+        <label>
+            <input type="checkbox" id="select-all-months"> 전체선택
+        </label>
+
+        <!-- 1월 ~ 12월 -->
+        {% for m in month_list %}
             <label>
-            <input type="checkbox" class="year-check"
-                    name="year" value="{{ year }}"
-                    {% if year|stringformat:"s" == selected_year %}checked{% endif %}>
-            {{ year }}
+            <input type="checkbox"
+                    class="month-check"
+                    name="month"
+                    value="{{ m }}"
+                    {% if m|stringformat:"s" in selected_months %}checked{% endif %}>
+            {{ m }}월
             </label>
         {% endfor %}
     </div>
-
-    <hr class="filter-divider">
-
-    <!-- 질소 입력 + 검색 버튼 -->
-    <div class="nitrogen-filter-row">
-        <input type="number" name="nitrogen"
-                step="1" min="0"
-                class="nitrogen-input"
-                placeholder="질소값 (예: 20)"
-                value="{{ nitrogen|default:'' }}">
-        <button type="submit" class="inline-search-button">검색</button>
+        <hr class="filter-divider">
+        
+        <div class="filters-container">
+            <div class="year-filter">
+                <select name="year" class="year-select">
+                    <option value="">연도 선택</option>
+                    {% for y in year_list %}
+                    <option value="{{ y }}"
+                            {% if y|stringformat:"s" == selected_year %}selected{% endif %}>
+                    {{ y }}년
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- 🔷 질소 입력 + 검색 버튼 -->
+            <div class="nitrogen-filter">
+            <input type="number" name="nitrogen"
+                    step="1" min="0"
+                    class="nitrogen-input"
+                    placeholder="질소값 (예: 20)"
+                    value="{{ nitrogen|default:'' }}">
+            <button type="submit" class="inline-search-button">검색</button>
+            </div>
         </div>
     </div>
-</form>
+    </form>
 
-<!-- 결과 테이블 (폼 밖) -->
-<table class="weatherforecast-table">
+    <!-- ✅ 기상평균 테이블 -->
+    <table class="weatherforecast-table">
     <thead>
         <tr>
         <th>평균기온 (℃)</th>
         <th>평균습도 (%)</th>
         <th>평균풍속 (km/h)</th>
-        <th>평균일사량 (MJ/㎡)</th>
-        <th>평균강수량 (mm)</th>
+        <th>하루평균일사량 (MJ/㎡)</th>
+        <th>하루평균강수량 (mm)</th>
         </tr>
     </thead>
     <tbody>
@@ -69,51 +88,56 @@
         <td>{{ weather_stats.avg_precipitation }}</td>
         </tr>
     </tbody>
-</table>
+    </table>
 
-<!-- 🔻 예측 결과 테이블 -->
-<table class="prediction-result-table">
+    <!-- 🔻 예측 결과 테이블 -->
+    <table class="prediction-result-table">
     <thead>
         <tr>
-            <th>예측값 (t/ha)</th>
-            <th>실제값 (t/ha)</th>
-            <th>오차율 (%)</th>
+        <th>예측값 (t/ha)</th>
+        <th>실제값 (t/ha)</th>
+        <th>오차율 (%)</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>{{ prediction|default:"-" }}</td>
-            <td>{{ actual|default:"-" }}</td>
-            <td>{{ error_rate|default:"-" }}</td>
+        <td>{{ prediction|default:"-" }}</td>
+        <td>{{ actual|default:"-" }}</td>
+        <td>{{ error_rate|default:"-" }}</td>
         </tr>
     </tbody>
-</table>
+    </table>
 
-
-<!-- ✅ 단일 선택 스크립트 -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 하나만 선택되도록 제어
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // ✅ 시도 단일 선택
     document.querySelectorAll('.sido-check').forEach(cb => {
         cb.addEventListener('change', () => {
         if (cb.checked) {
-            document.querySelectorAll('.sido-check').forEach(o => { if (o !== cb) o.checked = false; });
+            document.querySelectorAll('.sido-check')
+                    .forEach(o => { if (o !== cb) o.checked = false; });
         }
         });
     });
-    document.querySelectorAll('.year-check').forEach(cb => {
-        cb.addEventListener('change', () => {
-        if (cb.checked) {
-            document.querySelectorAll('.year-check').forEach(o => { if (o !== cb) o.checked = false; });
-        }
-        });
-    });
-});
 
-// 새로고침(F5) 시 파라미터 제거해 초기화
-window.addEventListener('pageshow', e => {
+    // ✅ 전체 월 선택 & 개별 월 동기화
+    const selectAll = document.getElementById('select-all-months');
+    const monthChecks = document.querySelectorAll('.month-check');
+
+    selectAll.addEventListener('change', () => {
+        monthChecks.forEach(cb => cb.checked = selectAll.checked);
+    });
+    monthChecks.forEach(cb => {
+        cb.addEventListener('change', () => {
+        selectAll.checked = Array.from(monthChecks).every(c => c.checked);
+        });
+    });
+    });
+
+    // 🔄 새로고침 시 파라미터 제거
+    window.addEventListener('pageshow', e => {
     if (e.persisted || (performance && performance.navigation.type === 1)) {
-    window.location.replace('/cabbageforecast/');
+        window.location.replace('/cabbageforecast/');
     }
 });
 </script>

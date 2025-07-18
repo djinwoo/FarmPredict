@@ -70,7 +70,6 @@ body {
     font-size: 19px;  /* 글씨 크기 설정 */
 }
 
-/* 🌟 컨테이너 (메인 영역) */
 .container {
     flex: 1;
     display: flex;
@@ -98,7 +97,6 @@ form {
     display: contents;
 }
 
-/* 🔍 검색창 (위쪽 컨테이너) */
 .top-section {
     width: 83%;
     max-width: 1600px;
@@ -114,7 +112,6 @@ form {
     margin-bottom: 10px;
 }
 
-/* 📊 데이터 & 지도 컨테이너 */
 .bottom-section {
     width: 85%;  /* 🔽 기존보다 가로 폭 5% 줄이기 */
     max-width: 2000px;  /* 🔽 최대 너비 조정 */
@@ -128,7 +125,6 @@ form {
     margin-top: 40px;
 }
 
-/* 🔍 검색 버튼 (돋보기 아이콘) */
 .search-button {
     width: 50px;
     height: 50px;
@@ -190,7 +186,6 @@ form {
 .search-button label:active {
     transform: scale(0.95); /* 5% 작아졌다가 원래대로 */
 }
-
 
 /* 🌦️ 데이터 컨테이너 */
 .data-container {
@@ -283,7 +278,6 @@ form {
     border-radius: 8px;
 }
 
-
 .bottomdata2-container {
     display: flex;
     flex-direction: column; /* 🔥 세로 정렬 */
@@ -295,7 +289,6 @@ form {
     background-color: #f4e0c4 ;
     border-radius: 8px;
 }
-
 /* ✅ 개별 행 스타일 (아이콘 + 텍스트) */
 .weather-row {
     display: flex;
@@ -303,14 +296,12 @@ form {
     gap: 10px; /* 아이콘과 텍스트 간격 */
     margin-bottom: 40px;
 }
-
 /* ✅ 아이콘 스타일 */
 .weather-icon {
     width: 40px; /* 아이콘 크기 */
     height: 40px;
     padding-left: 6px;
 }
-
 /* ✅ 텍스트 스타일 */
 .weather-text {
     font-size: 19px; /* 글씨 크기 */
@@ -412,6 +403,7 @@ form {
     font-weight: bold;
     color: #2d2d2d;
 }
+
 .onion-table {
     width: 100%;
     border-collapse: collapse;
@@ -421,7 +413,6 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     table-layout: fixed; /* ✅ 필수: 셀 너비 고정 */
 }
-
 /* ✅ 헤더 1행 고정 */
 .onion-table th {
     position: sticky;
@@ -431,19 +422,15 @@ form {
     padding: 12px;
     z-index: 1;  /* 헤더가 스크롤 위로 올라오지 않게 */
 }
-
 /* 셀 기본 스타일 */
 .onion-table td {
     padding: 10px 12px;
     border-bottom: 1px solid #ddd;
 }
-
-
 /* 마우스 오버 시 배경색 */
 .onion-table tr:hover {
     background-color: #F1F1F1;
 }
-
 /* ✅ 스크롤 래퍼 설정 */
 .onion-table-wrapper {
     max-height: 650px;
@@ -453,18 +440,19 @@ form {
     border: 1px solid #ccc;
     border-radius: 6px;
 }
-
 /* 🥬 Cabbage 전용 스타일 */
 .year-filter-form-cabbage {
     text-align: center;
     font-size: 20px;
 }
+
 .year-filter-group-cabbage {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
 }
+
 .year-filter-form-cabbage button {
     font-size: 18px;
     padding: 6px 14px;
@@ -474,22 +462,24 @@ form {
     border-radius: 6px;
     cursor: pointer;
 }
+
 .year-filter-form-cabbage button:hover {
     background-color: #5D7F5C;
 }
-
 
 /* 🧅 Onion 전용 스타일 */
 .year-filter-form-onion {
     text-align: center;
     font-size: 20px;
 }
+
 .year-filter-group-onion {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
 }
+
 .year-filter-form-onion button {
     font-size: 18px;
     padding: 6px 14px;
@@ -499,6 +489,7 @@ form {
     border-radius: 6px;
     cursor: pointer;
 }
+
 .year-filter-form-onion button:hover {
     background-color: #E9A061;
 }
@@ -513,7 +504,6 @@ form {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
     background-color: #fff;
 }
-
 /* 표 스타일 */
 .weather-table {
     width: 100%;
@@ -523,7 +513,6 @@ form {
     background-color: #fdfdfd;
     table-layout: fixed; /* ✅ 셀 고정 폭 */
 }
-
 /* 헤더 고정 */
 .weather-table thead th {
     position: sticky;
@@ -533,19 +522,15 @@ form {
     padding: 10px;
     z-index: 1;
 }
-
 /* 일반 셀 스타일 */
 .weather-table td {
     padding: 8px 10px;
     border-bottom: 1px solid #ddd;
 }
-
-
 /* 호버 효과 */
 .weather-table tr:hover {
     background-color: #f1f1f1;
 }
-
 /* 🌦️ Weather 전용 스타일 */
 .year-filter-form-weather {
     text-align: center;
@@ -572,7 +557,6 @@ form {
 .year-filter-form-weather button:hover {
     background-color: #4d88c6; /* hover 시 진한 파랑 */
 }
-
 /* 🪴 Soil 전용 스타일 */
 .year-filter-form-soil {             /* 전체 폭 */
     display: flex;
@@ -619,19 +603,39 @@ form {
 /* 연도 필터 - 12개 */
 .year-filter-row {
     display: grid;
-    grid-template-columns: repeat(12, auto);
-    gap: 18px 16px;
+    grid-auto-flow: column;  /* 열 방향으로만 배치 */
+    grid-auto-columns: auto; /* 각 칸 너비는 컨텐츠만큼 */
+    gap: 16px 24px;
     align-items: center;
-    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.filters-container {
+    display: flex;
+    justify-content: center;  /* 컨테이너 가운데 정렬 */
+    align-items: center;      /* 수직 가운데 정렬 */
+    gap: 26px;
+    margin-top: 16px;            /* 필터들 사이 간격 */
+}
+
+/* 2. 연도 선택박스 스타일 */
+.year-select {
+    padding: 6px 10px;
+    height: 40px;
+    width: 100px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 /* 🔄 질소 입력 필터 + 검색 버튼 */
-.nitrogen-filter-row {
+.nitrogen-filter {
     display: flex;                /* ✅ 그리드 대신 플렉스로 변경 */
     justify-content: center;     /* ✅ 가운데 정렬 */
     align-items: center;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 26px;
 }
 /* 질소 입력창 */
 .nitrogen-input {
@@ -680,7 +684,8 @@ form {
 .weatherforecast-table td {
     border: 1px solid #ccc;
     padding: 10px 12px;       /* ✅ 여백 추가 */
-    height: 44px;             /* ✅ 높이 강제 통일 */
+    height: 44px;
+    font-size: 18px;
 }
 
 .weatherforecast-table th {
@@ -700,6 +705,7 @@ form {
     border: 1px solid #ccc;
     padding: 10px 12px;       /* ✅ 여백 추가 */
     height: 44px;  
+    font-size: 18px;
 }
 
 .prediction-result-table th {
@@ -749,6 +755,7 @@ form {
     margin-top: 28px;
     margin-bottom: 0px;
 }
+
 .data-source a {
     color: #888;
 }
