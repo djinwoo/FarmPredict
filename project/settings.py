@@ -97,6 +97,10 @@ DATABASES = {
     'onion': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'main/onion.db',
+    },
+    'futureclimate': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/futureclimate.db',
     }
 }
 # Password validation

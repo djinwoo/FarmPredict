@@ -32,8 +32,8 @@ class Weatherdata(models.Model):
     max_temp = models.FloatField(db_column="최저기온")
     humidity = models.FloatField(db_column="습도")
     wind_speed = models.FloatField(db_column="풍속")
-    solar_radiation = models.CharField(max_length=100, db_column="일사량")
     avg_precipitation = models.FloatField(db_column="강수량")
+    solar_radiation = models.CharField(max_length=100, db_column="일사량")
 
     class Meta:
         db_table = "climatedata"  # SQLite의 'climate' 테이블과 매칭
@@ -92,3 +92,34 @@ class Onion(models.Model):
     def __str__(self):
         return f"[{self.year}] {self.region} - 10a당: {self.yield_per_10a}kg / 총: {self.total_production}톤"
 
+# main/models.py 파일에 추가
+
+# main/models.py 파일
+
+class FutureClimate(models.Model):
+    # 시나리오 정보
+    main_scenario = models.CharField(max_length=100, db_column='main_scenario',primary_key=True)
+    sub_scenario = models.CharField(max_length=50, db_column='sub_scenario')
+
+    # 날짜 및 지역 정보
+    year = models.IntegerField(db_column='년')
+    month = models.IntegerField(db_column='월')
+    sido = models.CharField(max_length=50, db_column='시도')
+    sigungu = models.CharField(max_length=50, db_column='시군구')
+    eupmyeondong = models.CharField(max_length=50, db_column='읍면동', null=True, blank=True)
+
+    # 기후 데이터
+    avg_temp = models.FloatField(db_column='평균기온',null=True,blank=True)
+    max_temp = models.FloatField(db_column='최고기온')
+    min_temp = models.FloatField(db_column='최저기온')
+    humidity = models.FloatField(db_column='습도')
+    wind_speed = models.FloatField(db_column='풍속')
+    avg_precipitation = models.FloatField(db_column='강수량')
+    solar_radiation = models.FloatField(db_column='일사량')
+
+    class Meta:
+        db_table = "climate_scenarios"  # DB에 있는 실제 테이블 이름
+        managed = False                 # Django가 이 테이블을 생성하거나 수정하지 않음
+
+    def __str__(self):
+        return f"{self.main_scenario} {self.sub_scenario} {self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.avg_temp} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation}"

@@ -511,4 +511,5 @@ def onionforecast(request):
     }
     return render(request,'main/onionforecast.html',context)
 
-
+def futuredatapage(request):
+    return render(request, 'main/futuredata.html')
