@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{# CSS 파일이 있다면 여기에 경로를 지정하세요. 예: <link rel="stylesheet" href="{% static 'css/your_style.css' %}"> #}
+
+<div class="filter-box">
+    <form method="get" action="" id="filter-form">
+        <!-- ① 첫 번째 필터 줄 : 모델 · 시나리오 · 연도범위 -->
+        <div class="filter-row first-row">
+            <div class="filter-group">
+                <label for="main-scenario">모델 선택 :</label>
+                <!-- 모델을 선택하면 페이지가 새로고침되어 하위 옵션들을 불러옵니다. -->
+                <select id="main-scenario" name="main_scenario" onchange="this.form.submit()">
+                    <option value="">모델 선택</option>
+                    {% for model_value, model_display in main_scenario_list %}
+                        <option value="{{ model_value }}" {% if model_value == selected_main_scenario %}selected{% endif %}>{{ model_display }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sub-scenario">시나리오 선택 :</label>
+                <select id="sub-scenario" name="sub_scenario" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {% for scenario in sub_scenario_list %}
+                        <option value="{{ scenario }}" {% if scenario == selected_sub_scenario %}selected{% endif %}>{{ scenario }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group year-range">
+                <label>연도 범위 : </label>
+                <div class="year-range-inner">
+                    <select id="start-year" name="start_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                        <option value="">시작</option>
+                        {% for year in year_list %}
+                            <option value="{{ year }}" {% if year|stringformat:"s" == selected_start_year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="range-sep">~</span>
+                    <select id="end-year" name="end_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                        <option value="">종료</option>
+                        {% for year in year_list %}
+                            <option value="{{ year }}" {% if year|stringformat:"s" == selected_end_year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 구분선 -->
+        <hr class="filter-divider">
+
+        <!-- ② 두 번째 필터 줄 : 시도 · 시군구 · 조회 -->
+        <div class="filter-row second-row">
+            <div class="filter-group">
+                <label for="sido">시·도 :</label>
+                <select id="sido" name="sido" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {% for sido_name in sido_list %}
+                        <option value="{{ sido_name }}" {% if sido_name == selected_sido %}selected{% endif %}>{{ sido_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sigungu">시·군·구 :</label>
+                <select id="sigungu" name="sigungu" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {# JavaScript가 이 부분을 채웁니다 #}
+                </select>
+            </div>
+
+            <div class="filter-group search-button-group">
+                <button type="submit" name="search" value="true" class="inline-search-button">검색</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 조회 결과가 표시될 영역 -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>연도</th>
+                        <th>월</th>
+                        <th>최고온도 (°C)</th>
+                        <th>최저온도 (°C)</th>
+                        <th>습도 (%)</th>
+                        <th>풍속 (m/s)</th>
+                        <th>일사량 (MJ/m²)</th>
+                        <th>월합 강수량 (mm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                    <tr>
+                        <td>{{ item.year }}</td>
+                        <td>{{ item.month }}</td>
+                        <td>{{ item.max_temp|floatformat:1 }}</td>
+                        <td>{{ item.min_temp|floatformat:1 }}</td>
+                        <td>{{ item.humidity|floatformat:1 }}</td>
+                        <td>{{ item.wind_speed|floatformat:1 }}</td>
+                        <td>{{ item.precipitation|floatformat:1 }}</td>
+                        <td>{{ item.solar_radiation|floatformat:1 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10">조회할 모델을 선택하거나, 선택한 조건에 맞는 데이터가 없습니다.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script>
+    // 시도/시군구 연동 로직
+    const locationData = JSON.parse('{{ location_data_json|escapejs }}');
+    const sidoSelect = document.getElementById('sido');
+    const sigunguSelect = document.getElementById('sigungu');
+
+    sidoSelect.addEventListener('change', function() {
+        const selectedSido = this.value;
+        sigunguSelect.innerHTML = '<option value="">전체</option>';
+        if (selectedSido && locationData[selectedSido]) {
+            locationData[selectedSido].sort().forEach(function(sigungu) {
+                const option = new Option(sigungu, sigungu);
+                sigunguSelect.add(option);
+            });
+        }
+    });
+    
+    // 페이지 로드 시, 이미 선택된 시도가 있다면 시군구 목록을 채워줌
+    document.addEventListener('DOMContentLoaded', function() {
+        const initialSido = '{{ selected_sido }}';
+        const initialSigungu = '{{ selected_sigungu }}';
+        if (initialSido) {
+            sidoSelect.value = initialSido;
+            sidoSelect.dispatchEvent(new Event('change'));
+            // 옵션이 생성될 시간을 주기 위해 setTimeout 사용
+            setTimeout(() => { sigunguSelect.value = initialSigungu; }, 100);
+        }
+    });
+</script>
+{% endblock %}

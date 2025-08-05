@@ -714,7 +714,7 @@ form {
 }
 
 .dongguk-footer {
-    margin-top: 220px;
+    margin-top: 60px;
     margin-left: 5px;
     text-align: center;
     color: #ddd; /* 텍스트 대비 */
@@ -758,4 +758,136 @@ form {
 
 .data-source a {
     color: #888;
+}
+
+/* 각 행을 flex 컨테이너로 */
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+/* 첫 번째 줄 그룹 간격 좁게 */
+.first-row .filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* 연도 범위만 넓게 */
+.year-range-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.range-sep {
+    margin: 0 4px;
+}
+
+/* 구분선 */
+.filter-divider {
+    border: none;
+    border-top: 1.5px solid #AAA;
+    margin: 16px 0;
+}
+
+/* 두 번째 줄: 시도/시군구/버튼 */
+.second-row .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+    .search-button-group {
+    flex: 0 0 auto;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;  /* 세로 중앙 정렬 */
+    gap: 8px;             /* 라벨과 select 사이 간격 */
+    flex: 1;              /* 동일 비율로 늘어나게(필요시) */
+}
+/* 공통 label, select, button 스타일 */
+.filter-group label {
+    font-size: 22px;
+    margin: 0;            /* 위아래 여백 제거 */
+    white-space: nowrap;  /* 라벨이 줄바꿈되지 않도록 */
+    font-weight: 500;
+}
+
+.filter-group select {
+    font-size: 18px;              /* 남은 공간을 모두 차지 */
+    width: 160px;     /* 최소 너비 */
+    height: 40px;
+    border-radius: 6px;
+}
+
+.table-container {
+    max-height: 650px;
+    overflow-y: auto;
+    margin: 20px auto;
+    width: 85.5%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* 스크롤바 디자인 (선택 사항) */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 8px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 한 줄로 합치기 */
+    background-color: #fff;
+}
+
+/* 테이블 헤더(제목) 스타일 */
+.table-container thead {
+    /* 헤더 배경색 (이미지 참고) */
+    background-color: #4B4B4B; 
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+
+    /* 스크롤 시 헤더가 상단에 고정되도록 설정 */
+    position: sticky;
+    top: 0;
+    z-index: 1; /* 다른 요소 위에 오도록 설정 */
+}
+
+/* 모든 셀(th, td)의 공통 스타일 */
+.table-container th,
+.table-container td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef; /* 행 구분선 */
+    white-space: nowrap; /* 셀 내용 줄바꿈 방지 */
+}
+
+/* 테이블 바디(내용) 스타일 */
+.table-container tbody td {
+    color: #333;
+    font-size: 20px;
+}
+
+/* 마지막 행의 하단 테두리 제거 */
+.table-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 마우스를 올렸을 때 행 배경색 변경 (선택 사항) */
+.table-container tbody tr:hover {
+    background-color: #f8f9fa;
 }

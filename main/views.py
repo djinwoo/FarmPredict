@@ -3,7 +3,8 @@ import os
 import json
 from django.shortcuts import render
 from pathlib import Path
-from .models import Weatherdata,Soildata,Region,Cabbage,Onion
+from . import models
+from .models import Region, Weatherdata, Soildata, Cabbage, Onion
 from django.http import JsonResponse
 # BASE_DIR 설정 (manage.py가 있는 Django 프로젝트 루트 경로)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -252,6 +253,132 @@ def onionpage(request):
         'selected_years': selected_years,
     }
     return render(request, 'main/onionpage.html', context)
+
+MODEL_MAP = {
+    'access_cm2': models.AccessCm2,
+    'access_esm1_5': models.AccessEsm1_5,
+    'canesm5': models.CanEsm5,
+    'cnrm_cm6_1': models.CnrmCm6_1,
+    'cnrm_esm2_1': models.CnrmEsm2_1,
+    'ec_earth3': models.EcEarth3,
+    'gfdl_esm4': models.GfdlEsm4,
+    'inm_cm4_8': models.InmCm4_8,
+    'inm_cm5_0': models.InmCm5_0,
+    'ipsl_cm6a_lr': models.IpslCm6aLr,
+    'kace_1_0_g': models.Kace1_0G,
+    'miroc6': models.Miroc6,
+    'miroc_es2l': models.MirocEs2l,
+    'mpi_esm1_2_hr': models.MpiEsm1_2Hr,
+    'mpi_esm1_2_lr': models.MpiEsm1_2Lr,
+    'mri_esm2_0': models.MriEsm2_0,
+    'noresm2_lm': models.NorEsm2Lm,
+    'ukesm1_0_ll': models.UkEsm1_0Ll,
+}
+# main/views.py
+
+from django.shortcuts import render
+from . import models
+import json
+
+# settings.py의 DB 별칭과 실제 모델 클래스를 매핑하는 딕셔너리
+MODEL_MAP = {
+    'access_cm2': models.AccessCm2,
+    'access_esm1_5': models.AccessEsm1_5,
+    'canesm5': models.CanEsm5,
+    'cnrm_cm6_1': models.CnrmCm6_1,
+    'cnrm_esm2_1': models.CnrmEsm2_1,
+    'ec_earth3': models.EcEarth3,
+    'gfdl_esm4': models.GfdlEsm4,
+    'inm_cm4_8': models.InmCm4_8,
+    'inm_cm5_0': models.InmCm5_0,
+    'ipsl_cm6a_lr': models.IpslCm6aLr,
+    'kace_1_0_g': models.Kace1_0G,
+    'miroc6': models.Miroc6,
+    'miroc_es2l': models.MirocEs2l,
+    'mpi_esm1_2_hr': models.MpiEsm1_2Hr,
+    'mpi_esm1_2_lr': models.MpiEsm1_2Lr,
+    'mri_esm2_0': models.MriEsm2_0,
+    'noresm2_lm': models.NorEsm2Lm,
+    'ukesm1_0_ll': models.UkEsm1_0Ll,
+}
+
+def futuredatapage(request):
+    # --- 1. 사용자가 선택한 필터 값 가져오기 ---
+    selected_model_db = request.GET.get('main_scenario', '')
+    selected_sub_scenario = request.GET.get('sub_scenario', '')
+    start_year = request.GET.get('start_year', '')
+    end_year = request.GET.get('end_year', '')
+    selected_sido = request.GET.get('sido', '')
+    selected_sigungu = request.GET.get('sigungu', '')
+
+    # --- 2. 템플릿에 전달할 변수들 초기화 ---
+    context = {
+        'results': [],
+        'sub_scenario_list': [],
+        'year_list': [],
+        'sido_list': [],
+        'location_data_json': '{}',
+    }
+
+    # --- 3. 동적 모델 선택 및 데이터 처리 ---
+    TargetModel = MODEL_MAP.get(selected_model_db)
+    if TargetModel:
+        # --- 3-1. 드롭다운 옵션은 모델이 선택되면 항상 생성 ---
+        base_queryset = TargetModel.objects.all()
+        context['sub_scenario_list'] = base_queryset.values_list('sub_scenario', flat=True).distinct()
+        context['year_list'] = base_queryset.values_list('year', flat=True).distinct().order_by('year')
+        
+        location_data = {}
+        locations = base_queryset.values('sido', 'sigungu').distinct()
+        for loc in locations:
+            if loc['sido'] not in location_data:
+                location_data[loc['sido']] = []
+            if loc['sigungu'] not in location_data[loc['sido']]:
+                location_data[loc['sido']].append(loc['sigungu'])
+        
+        context['sido_list'] = sorted(location_data.keys())
+        context['location_data_json'] = json.dumps(location_data, ensure_ascii=False)
+
+        # --- 3-2. '검색' 버튼을 눌렀을 때만 최종 결과 조회 ---
+        # HTML의 <button name="search" value="true"> 에서 'search' 파라미터가 넘어왔는지 확인
+        if 'search' in request.GET:
+            results_queryset = TargetModel.objects.all()
+
+            # 필터링 로직 적용
+            if selected_sub_scenario:
+                results_queryset = results_queryset.filter(sub_scenario=selected_sub_scenario)
+            if start_year:
+                results_queryset = results_queryset.filter(year__gte=start_year)
+            if end_year:
+                results_queryset = results_queryset.filter(year__lte=end_year)
+            if selected_sido:
+                results_queryset = results_queryset.filter(sido=selected_sido)
+            if selected_sigungu:
+                results_queryset = results_queryset.filter(sigungu=selected_sigungu)
+
+            # 필요한 컬럼만 선택하여 조회
+            fields_to_select = [
+                'main_scenario', 'sub_scenario', 'year', 'month', 'sido', 'sigungu',
+                'avg_temp', 'max_temp', 'min_temp', 'humidity', 'wind_speed', 
+                'precipitation', 'solar_radiation'
+            ]
+            context['results'] = results_queryset.order_by('year', 'month').values(*fields_to_select)[:200]
+
+    # --- 4. 템플릿에 전달할 전체 컨텍스트 구성 ---
+    context['main_scenario_list'] = [(key, key.upper()) for key in MODEL_MAP.keys()]
+    
+    # 사용자가 선택했던 값들을 다시 전달하여 폼에 유지
+    context.update({
+        'selected_main_scenario': selected_model_db,
+        'selected_sub_scenario': selected_sub_scenario,
+        'selected_start_year': start_year,
+        'selected_end_year': end_year,
+        'selected_sido': selected_sido,
+        'selected_sigungu': selected_sigungu,
+    })
+    
+    return render(request, 'main/futuredatapage.html', context)
+
 
 def parse_float_safe(val):
     try:
@@ -511,5 +638,5 @@ def onionforecast(request):
     }
     return render(request,'main/onionforecast.html',context)
 
-def futuredatapage(request):
-    return render(request, 'main/futuredata.html')
+def scorepage(request):
+    return render(request, 'main/scorepage.html')

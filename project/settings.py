@@ -98,11 +98,82 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'main/onion.db',
     },
-    'futureclimate': {
+    'access_cm2': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'main/futureclimate.db',
-    }
+        'NAME': BASE_DIR / 'main/databases/ACCESS-CM2.db',
+    },
+    'access_esm1_5': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/ACCESS-ESM1-5.db',
+    },
+    'canesm5': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/CanESM5.db',
+    },
+    'cnrm_cm6_1': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/CNRM-CM6-1.db',
+    },
+    'cnrm_esm2_1': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/CNRM-ESM2-1.db',
+    },
+    'ec_earth3': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/EC-Earth3.db',
+    },
+    'gfdl_esm4': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/GFDL-ESM4.db',
+    },
+    'inm_cm4_8': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/INM-CM4-8.db',
+    },
+    'inm_cm5_0': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/INM-CM5-0.db',
+    },
+    'ipsl_cm6a_lr': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/IPSL-CM6A-LR.db',
+    },
+    'kace_1_0_g': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/KACE-1-0-G.db',
+    },
+    'miroc6': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/MIROC6.db',
+    },
+    'miroc_es2l': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/MIROC-ES2L.db',
+    },
+    'mpi_esm1_2_hr': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/MPI-ESM1-2-HR.db',
+    },
+    'mpi_esm1_2_lr': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/MPI-ESM1-2-LR.db',
+    },
+    'mri_esm2_0': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/MRI-ESM2-0.db',
+    },
+    'noresm2_lm': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/NorESM2-LM.db',
+    },
+    'ukesm1_0_ll': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'main/databases/UKESM1-0-LL.db',
+    },
 }
+
+DATABASE_ROUTERS = ['main.routers.MultiDBRouter']
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

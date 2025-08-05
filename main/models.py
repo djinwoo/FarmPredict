@@ -93,33 +93,103 @@ class Onion(models.Model):
         return f"[{self.year}] {self.region} - 10a당: {self.yield_per_10a}kg / 총: {self.total_production}톤"
 
 # main/models.py 파일에 추가
-
-# main/models.py 파일
-
-class FutureClimate(models.Model):
-    # 시나리오 정보
-    main_scenario = models.CharField(max_length=100, db_column='main_scenario',primary_key=True)
+class FutureClimateBase(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    main_scenario = models.CharField(max_length=100, db_column='main_scenario')
     sub_scenario = models.CharField(max_length=50, db_column='sub_scenario')
-
-    # 날짜 및 지역 정보
     year = models.IntegerField(db_column='년')
     month = models.IntegerField(db_column='월')
     sido = models.CharField(max_length=50, db_column='시도')
     sigungu = models.CharField(max_length=50, db_column='시군구')
     eupmyeondong = models.CharField(max_length=50, db_column='읍면동', null=True, blank=True)
-
-    # 기후 데이터
-    avg_temp = models.FloatField(db_column='평균기온',null=True,blank=True)
+    avg_temp = models.FloatField(db_column='평균기온')
     max_temp = models.FloatField(db_column='최고기온')
     min_temp = models.FloatField(db_column='최저기온')
     humidity = models.FloatField(db_column='습도')
     wind_speed = models.FloatField(db_column='풍속')
-    avg_precipitation = models.FloatField(db_column='강수량')
+    precipitation = models.FloatField(db_column='강수량')
     solar_radiation = models.FloatField(db_column='일사량')
 
     class Meta:
-        db_table = "climate_scenarios"  # DB에 있는 실제 테이블 이름
-        managed = False                 # Django가 이 테이블을 생성하거나 수정하지 않음
+        abstract = True  # 이 모델을 추상 기본 클래스로 설정
+        managed = False
 
     def __str__(self):
-        return f"{self.main_scenario} {self.sub_scenario} {self.year}-{self.month} {self.sido} {self.sigungu} {self.eupmyeondong} {self.avg_temp} {self.min_temp} {self.max_temp} {self.humidity} {self.wind_speed} {self.solar_radiation} {self.avg_precipitation}"
+        return f"[{self.year}-{self.month}] {self.sido} {self.sigungu} ({self.sub_scenario})"
+
+
+# 2. 18개의 개별 시나리오 모델 정의
+# 각 모델은 FutureClimateBase를 상속받아 모든 필드를 그대로 사용합니다.
+# 라우터가 각 모델의 이름을 보고 settings.py에 정의된 해당 DB로 연결해줍니다.
+
+class AccessCm2(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class AccessEsm1_5(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class CanEsm5(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class CnrmCm6_1(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class CnrmEsm2_1(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class EcEarth3(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class GfdlEsm4(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class InmCm4_8(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class InmCm5_0(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class IpslCm6aLr(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class Kace1_0G(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class Miroc6(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class MirocEs2l(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class MpiEsm1_2Hr(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class MpiEsm1_2Lr(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class MriEsm2_0(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class NorEsm2Lm(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'
+
+class UkEsm1_0Ll(FutureClimateBase):
+    class Meta(FutureClimateBase.Meta):
+        db_table = 'climate_data'

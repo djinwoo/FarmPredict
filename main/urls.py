@@ -13,6 +13,7 @@ urlpatterns = [
     path('futuredatapage/', futuredatapage, name="futuredatapage"),
     path('cabbageforecast/', cabbageforecast, name="cabbageforecast"),
     path('onionforecast/', onionforecast, name="onionforecast"),
+    path('scorepage/', scorepage, name="scorepage"),
     path('get-sigungu/', views.get_sigungu, name='get_sigungu'),
     path('get-eupmyeondong/', views.get_eupmyeondong, name='get_eupmyeondong'),
 ]
