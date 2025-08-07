@@ -28,25 +28,6 @@
                     {% endfor %}
                 </select>
             </div>
-
-            <div class="filter-group year-range">
-                <label>연도 범위 : </label>
-                <div class="year-range-inner">
-                    <select id="start-year" name="start_year" {% if not selected_main_scenario %}disabled{% endif %}>
-                        <option value="">시작</option>
-                        {% for year in year_list %}
-                            <option value="{{ year }}" {% if year|stringformat:"s" == selected_start_year %}selected{% endif %}>{{ year }}</option>
-                        {% endfor %}
-                    </select>
-                    <span class="range-sep">~</span>
-                    <select id="end-year" name="end_year" {% if not selected_main_scenario %}disabled{% endif %}>
-                        <option value="">종료</option>
-                        {% for year in year_list %}
-                            <option value="{{ year }}" {% if year|stringformat:"s" == selected_end_year %}selected{% endif %}>{{ year }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
         </div>
 
         <!-- 구분선 -->
@@ -63,12 +44,41 @@
                     {% endfor %}
                 </select>
             </div>
-
             <div class="filter-group">
                 <label for="sigungu">시·군·구 :</label>
                 <select id="sigungu" name="sigungu" {% if not selected_main_scenario %}disabled{% endif %}>
                     <option value="">전체</option>
                     {# JavaScript가 이 부분을 채웁니다 #}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>기간 :</label>
+                <select id="start-year" name="start_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">년</option>
+                    {% for year in year_list %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == selected_start_year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <select id="start-month" name="start_month" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">월</option>
+                    <option value="all" {% if "all" == selected_start_month %}selected{% endif %}>전체</option>
+                    {% for month in month_list %}
+                        <option value="{{ month }}" {% if month|stringformat:"s" == selected_start_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
+                </select>
+                <span class="range-sep">~</span>
+                <select id="end-year" name="end_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">년</option>
+                    {% for year in year_list %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == selected_end_year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <select id="end-month" name="end_month" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">월</option>
+                    <option value="all" {% if "all" == selected_end_month %}selected{% endif %}>전체</option>
+                    {% for month in month_list %}
+                        <option value="{{ month }}" {% if month|stringformat:"s" == selected_end_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -99,12 +109,12 @@
                     <tr>
                         <td>{{ item.year }}</td>
                         <td>{{ item.month }}</td>
-                        <td>{{ item.max_temp|floatformat:1 }}</td>
-                        <td>{{ item.min_temp|floatformat:1 }}</td>
-                        <td>{{ item.humidity|floatformat:1 }}</td>
-                        <td>{{ item.wind_speed|floatformat:1 }}</td>
-                        <td>{{ item.precipitation|floatformat:1 }}</td>
-                        <td>{{ item.solar_radiation|floatformat:1 }}</td>
+                        <td>{{ item.max_temp|floatformat:2 }}</td>
+                        <td>{{ item.min_temp|floatformat:2 }}</td>
+                        <td>{{ item.humidity|floatformat:2 }}</td>
+                        <td>{{ item.wind_speed|floatformat:2 }}</td>
+                        <td>{{ item.precipitation|floatformat:2 }}</td>
+                        <td>{{ item.solar_radiation|floatformat:2 }}</td>
                     </tr>
                     {% empty %}
                     <tr>

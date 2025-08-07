@@ -6,6 +6,7 @@ from pathlib import Path
 from . import models
 from .models import Region, Weatherdata, Soildata, Cabbage, Onion
 from django.http import JsonResponse
+from django.db.models import Q, Avg
 # BASE_DIR 설정 (manage.py가 있는 Django 프로젝트 루트 경로)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -274,40 +275,15 @@ MODEL_MAP = {
     'noresm2_lm': models.NorEsm2Lm,
     'ukesm1_0_ll': models.UkEsm1_0Ll,
 }
-# main/views.py
-
-from django.shortcuts import render
-from . import models
-import json
-
-# settings.py의 DB 별칭과 실제 모델 클래스를 매핑하는 딕셔너리
-MODEL_MAP = {
-    'access_cm2': models.AccessCm2,
-    'access_esm1_5': models.AccessEsm1_5,
-    'canesm5': models.CanEsm5,
-    'cnrm_cm6_1': models.CnrmCm6_1,
-    'cnrm_esm2_1': models.CnrmEsm2_1,
-    'ec_earth3': models.EcEarth3,
-    'gfdl_esm4': models.GfdlEsm4,
-    'inm_cm4_8': models.InmCm4_8,
-    'inm_cm5_0': models.InmCm5_0,
-    'ipsl_cm6a_lr': models.IpslCm6aLr,
-    'kace_1_0_g': models.Kace1_0G,
-    'miroc6': models.Miroc6,
-    'miroc_es2l': models.MirocEs2l,
-    'mpi_esm1_2_hr': models.MpiEsm1_2Hr,
-    'mpi_esm1_2_lr': models.MpiEsm1_2Lr,
-    'mri_esm2_0': models.MriEsm2_0,
-    'noresm2_lm': models.NorEsm2Lm,
-    'ukesm1_0_ll': models.UkEsm1_0Ll,
-}
 
 def futuredatapage(request):
     # --- 1. 사용자가 선택한 필터 값 가져오기 ---
     selected_model_db = request.GET.get('main_scenario', '')
     selected_sub_scenario = request.GET.get('sub_scenario', '')
     start_year = request.GET.get('start_year', '')
+    start_month = request.GET.get('start_month', '')
     end_year = request.GET.get('end_year', '')
+    end_month = request.GET.get('end_month', '')
     selected_sido = request.GET.get('sido', '')
     selected_sigungu = request.GET.get('sigungu', '')
 
@@ -316,6 +292,7 @@ def futuredatapage(request):
         'results': [],
         'sub_scenario_list': [],
         'year_list': [],
+        'month_list': list(range(1, 13)), # 1~12월 목록
         'sido_list': [],
         'location_data_json': '{}',
     }
@@ -340,23 +317,40 @@ def futuredatapage(request):
         context['location_data_json'] = json.dumps(location_data, ensure_ascii=False)
 
         # --- 3-2. '검색' 버튼을 눌렀을 때만 최종 결과 조회 ---
-        # HTML의 <button name="search" value="true"> 에서 'search' 파라미터가 넘어왔는지 확인
         if 'search' in request.GET:
             results_queryset = TargetModel.objects.all()
 
-            # 필터링 로직 적용
+            # 시나리오, 지역 필터링
             if selected_sub_scenario:
                 results_queryset = results_queryset.filter(sub_scenario=selected_sub_scenario)
-            if start_year:
-                results_queryset = results_queryset.filter(year__gte=start_year)
-            if end_year:
-                results_queryset = results_queryset.filter(year__lte=end_year)
             if selected_sido:
                 results_queryset = results_queryset.filter(sido=selected_sido)
             if selected_sigungu:
                 results_queryset = results_queryset.filter(sigungu=selected_sigungu)
 
-            # 필요한 컬럼만 선택하여 조회
+            # --- 연/월 범위 필터링 로직 수정 ---
+            # 시작일 처리
+            if start_year:
+                if not start_month or start_month == 'all':
+                    # '월'을 '전체'로 선택하면 해당 연도 1월 1일부터
+                    results_queryset = results_queryset.filter(year__gte=int(start_year))
+                else:
+                    # 특정 월을 선택하면 그 달부터
+                    results_queryset = results_queryset.filter(
+                        Q(year__gt=int(start_year)) | Q(year=int(start_year), month__gte=int(start_month))
+                    )
+
+            # 종료일 처리
+            if end_year:
+                if not end_month or end_month == 'all':
+                    # '월'을 '전체'로 선택하면 해당 연도 12월 31일까지
+                    results_queryset = results_queryset.filter(year__lte=int(end_year))
+                else:
+                    # 특정 월을 선택하면 그 달까지
+                    results_queryset = results_queryset.filter(
+                        Q(year__lt=int(end_year)) | Q(year=int(end_year), month__lte=int(end_month))
+                    )
+
             fields_to_select = [
                 'main_scenario', 'sub_scenario', 'year', 'month', 'sido', 'sigungu',
                 'avg_temp', 'max_temp', 'min_temp', 'humidity', 'wind_speed', 
@@ -367,12 +361,13 @@ def futuredatapage(request):
     # --- 4. 템플릿에 전달할 전체 컨텍스트 구성 ---
     context['main_scenario_list'] = [(key, key.upper()) for key in MODEL_MAP.keys()]
     
-    # 사용자가 선택했던 값들을 다시 전달하여 폼에 유지
     context.update({
         'selected_main_scenario': selected_model_db,
         'selected_sub_scenario': selected_sub_scenario,
         'selected_start_year': start_year,
+        'selected_start_month': start_month,
         'selected_end_year': end_year,
+        'selected_end_month': end_month,
         'selected_sido': selected_sido,
         'selected_sigungu': selected_sigungu,
     })
@@ -639,4 +634,114 @@ def onionforecast(request):
     return render(request,'main/onionforecast.html',context)
 
 def scorepage(request):
-    return render(request, 'main/scorepage.html')
+    # --- 1. 필터 값 가져오기 (이전과 동일) ---
+    selected_model_db = request.GET.get('main_scenario', '')
+    start_year = request.GET.get('start_year', '')
+    start_month = request.GET.get('start_month', '')
+    end_year = request.GET.get('end_year', '')
+    end_month = request.GET.get('end_month', '')
+    selected_sido = request.GET.get('sido', '')
+    selected_sigungu = request.GET.get('sigungu', '')
+    selected_sub_scenario = request.GET.get('sub_scenario', '')
+    nitrogen = request.GET.get('nitrogen') # 질소값 추가
+
+
+    # --- 2. 컨텍스트 초기화 ---
+    context = {
+        'results': [],
+        'weather_stats': {}, # 요약 통계를 담을 딕셔너리 초기화
+        'sub_scenario_list': [],
+        'year_list': [],
+        'month_list': list(range(1, 13)),
+        'sido_list': [],
+        'location_data_json': '{}',
+        'nitrogen': nitrogen,
+    }
+
+    # --- 3. 동적 모델 선택 및 데이터 처리 ---
+    TargetModel = MODEL_MAP.get(selected_model_db)
+    if TargetModel:
+        # --- 3-1. 드롭다운 옵션 생성 (이전과 동일) ---
+        base_queryset = TargetModel.objects.all()
+        context['sub_scenario_list'] = base_queryset.values_list('sub_scenario', flat=True).distinct()
+        context['year_list'] = base_queryset.values_list('year', flat=True).distinct().order_by('year')
+        
+        location_data = {}
+        locations = base_queryset.values('sido', 'sigungu').distinct()
+        for loc in locations:
+            if loc['sido'] not in location_data:
+                location_data[loc['sido']] = []
+            if loc['sigungu'] not in location_data[loc['sido']]:
+                location_data[loc['sido']].append(loc['sigungu'])
+        
+        context['sido_list'] = sorted(location_data.keys())
+        context['location_data_json'] = json.dumps(location_data, ensure_ascii=False)
+
+
+        # --- 3-2. '검색' 버튼을 눌렀을 때만 최종 결과 조회 ---
+        if 'search' in request.GET:
+            results_queryset = TargetModel.objects.all()
+
+            # 필터링 로직 (이전과 동일)
+            if selected_sub_scenario:
+                results_queryset = results_queryset.filter(sub_scenario=selected_sub_scenario)
+            if selected_sido:
+                results_queryset = results_queryset.filter(sido=selected_sido)
+            if selected_sigungu:
+                results_queryset = results_queryset.filter(sigungu=selected_sigungu)
+            if start_year:
+                if not start_month or start_month == 'all':
+                    results_queryset = results_queryset.filter(year__gte=int(start_year))
+                else:
+                    results_queryset = results_queryset.filter(
+                        Q(year__gt=int(start_year)) | Q(year=int(start_year), month__gte=int(start_month))
+                    )
+            if end_year:
+                if not end_month or end_month == 'all':
+                    results_queryset = results_queryset.filter(year__lte=int(end_year))
+                else:
+                    results_queryset = results_queryset.filter(
+                        Q(year__lt=int(end_year)) | Q(year=int(end_year), month__lte=int(end_month))
+                    )
+
+            # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼ 이 부분이 수정되었습니다 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+            # 필터링된 결과에 대한 평균값 계산
+            if results_queryset.exists():
+                stats = results_queryset.aggregate(
+                    max_temp__avg=Avg('max_temp'),
+                    min_temp__avg=Avg('min_temp'),
+                    humidity__avg=Avg('humidity'),
+                    wind_speed__avg=Avg('wind_speed'),
+                    monthly_solar_avg=Avg('solar_radiation'),
+                    monthly_precip_avg=Avg('precipitation')
+                )
+                
+                # 최고/최저 기온 평균으로 '평균기온' 계산
+                avg_max = stats.get('max_temp__avg') or 0
+                avg_min = stats.get('min_temp__avg') or 0
+                stats['avg_temp__avg'] = (avg_max + avg_min) / 2
+
+                avg_monthly_solar = stats.pop('monthly_solar_avg') or 0
+                stats['solar_radiation__avg'] = avg_monthly_solar / 30
+
+                avg_monthly_precip = stats.pop('monthly_precip_avg') or 0
+                stats['precipitation__avg'] = avg_monthly_precip / 30
+                
+                # 계산된 통계 딕셔너리를 context에 바로 전달
+                context['weather_stats'] = stats
+            # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    # --- 4. 템플릿에 전달할 전체 컨텍스트 구성 (이전과 동일) ---
+    context['main_scenario_list'] = [(key, key.upper()) for key in MODEL_MAP.keys()]
+    context.update({
+        'selected_main_scenario': selected_model_db,
+        'selected_sub_scenario': selected_sub_scenario,
+        'selected_start_year': start_year,
+        'selected_start_month': start_month,
+        'selected_end_year': end_year,
+        'selected_end_month': end_month,
+        'selected_sido': selected_sido,
+        'selected_sigungu': selected_sigungu,
+    })
+    
+    return render(request, 'main/scorepage.html', context)

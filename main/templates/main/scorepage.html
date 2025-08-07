@@ -2,5 +2,149 @@
 {% load static %}
 
 {% block content %}
+{# CSS 파일이 있다면 여기에 경로를 지정하세요. 예: <link rel="stylesheet" href="{% static 'css/your_style.css' %}"> #}
 
+<div class="filter-box">
+    <form method="get" action="" id="filter-form">
+        <!-- ① 첫 번째 필터 줄 : 모델 · 시나리오 · 연도범위 -->
+        <div class="filter-row first-row">
+            <div class="filter-group">
+                <label for="main-scenario">모델 선택 :</label>
+                <!-- 모델을 선택하면 페이지가 새로고침되어 하위 옵션들을 불러옵니다. -->
+                <select id="main-scenario" name="main_scenario" onchange="this.form.submit()">
+                    <option value="">모델 선택</option>
+                    {% for model_value, model_display in main_scenario_list %}
+                        <option value="{{ model_value }}" {% if model_value == selected_main_scenario %}selected{% endif %}>{{ model_display }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sub-scenario">시나리오 선택 :</label>
+                <select id="sub-scenario" name="sub_scenario" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {% for scenario in sub_scenario_list %}
+                        <option value="{{ scenario }}" {% if scenario == selected_sub_scenario %}selected{% endif %}>{{ scenario }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- 구분선 -->
+        <hr class="filter-divider">
+
+        <!-- ② 두 번째 필터 줄 : 시도 · 시군구 · 조회 -->
+        <div class="filter-row second-row">
+            <div class="filter-group">
+                <label for="sido">시·도 :</label>
+                <select id="sido" name="sido" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {% for sido_name in sido_list %}
+                        <option value="{{ sido_name }}" {% if sido_name == selected_sido %}selected{% endif %}>{{ sido_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sigungu">시·군·구 :</label>
+                <select id="sigungu" name="sigungu" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">전체</option>
+                    {# JavaScript가 이 부분을 채웁니다 #}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>기간 :</label>
+                <select id="start-year" name="start_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">년</option>
+                    {% for year in year_list %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == selected_start_year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <select id="start-month" name="start_month" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">월</option>
+                    <option value="all" {% if "all" == selected_start_month %}selected{% endif %}>전체</option>
+                    {% for month in month_list %}
+                        <option value="{{ month }}" {% if month|stringformat:"s" == selected_start_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
+                </select>
+                <span class="range-sep">~</span>
+                <select id="end-year" name="end_year" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">년</option>
+                    {% for year in year_list %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == selected_end_year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <select id="end-month" name="end_month" {% if not selected_main_scenario %}disabled{% endif %}>
+                    <option value="">월</option>
+                    <option value="all" {% if "all" == selected_end_month %}selected{% endif %}>전체</option>
+                    {% for month in month_list %}
+                        <option value="{{ month }}" {% if month|stringformat:"s" == selected_end_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <hr class="filter-divider">
+
+        <div class="nitrogen-filter">
+                <input type="number" name="nitrogen"
+                        step="1" min="0"
+                        class="nitrogen-input"
+                        placeholder="질소값 (예: 20)"
+                        value="{{ nitrogen|default:'' }}">
+                <button type="submit" name="search" value="true" class="inline-search-button">검색</button>
+        </div>
+
+    </form>
+</div>
+
+
+    <table class="weatherforecast-table">
+            <thead>
+                <tr>
+                    <th>평균기온 (℃)</th>
+                    <th>평균습도 (%)</th>
+                    <th>평균풍속 (m/s)</th>
+                    <th>하루평균일사량 (MJ/㎡)</th>
+                    <th>하루평균강수량 (mm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ weather_stats.avg_temp__avg|floatformat:2|default:"-" }}</td>
+                    <td>{{ weather_stats.humidity__avg|floatformat:2|default:"-" }}</td>
+                    <td>{{ weather_stats.wind_speed__avg|floatformat:2|default:"-" }}</td>
+                    <td>{{ weather_stats.solar_radiation__avg|floatformat:2|default:"-" }}</td>
+                    <td>{{ weather_stats.precipitation__avg|floatformat:2|default:"-" }}</td>
+                </tr>
+            </tbody>
+        </table>
+<script>
+    // 시도/시군구 연동 로직
+    const locationData = JSON.parse('{{ location_data_json|escapejs }}');
+    const sidoSelect = document.getElementById('sido');
+    const sigunguSelect = document.getElementById('sigungu');
+
+    sidoSelect.addEventListener('change', function() {
+        const selectedSido = this.value;
+        sigunguSelect.innerHTML = '<option value="">전체</option>';
+        if (selectedSido && locationData[selectedSido]) {
+            locationData[selectedSido].sort().forEach(function(sigungu) {
+                const option = new Option(sigungu, sigungu);
+                sigunguSelect.add(option);
+            });
+        }
+    });
+    
+    // 페이지 로드 시, 이미 선택된 시도가 있다면 시군구 목록을 채워줌
+    document.addEventListener('DOMContentLoaded', function() {
+        const initialSido = '{{ selected_sido }}';
+        const initialSigungu = '{{ selected_sigungu }}';
+        if (initialSido) {
+            sidoSelect.value = initialSido;
+            sidoSelect.dispatchEvent(new Event('change'));
+            // 옵션이 생성될 시간을 주기 위해 setTimeout 사용
+            setTimeout(() => { sigunguSelect.value = initialSigungu; }, 100);
+        }
+    });
+</script>
 {% endblock %}
