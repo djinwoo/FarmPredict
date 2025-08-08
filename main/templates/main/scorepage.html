@@ -18,9 +18,14 @@
                     {% endfor %}
                 </select>
             </div>
-
             <div class="filter-group">
-                <label for="sub-scenario">시나리오 선택 :</label>
+                <label for="sub-scenario">
+                    {% if selected_model_origin %}
+                        {{ selected_model_origin }} 시나리오 선택 :
+                    {% else %}
+                        시나리오 선택 :
+                    {% endif %}
+                </label>
                 <select id="sub-scenario" name="sub_scenario" {% if not selected_main_scenario %}disabled{% endif %}>
                     <option value="">전체</option>
                     {% for scenario in sub_scenario_list %}

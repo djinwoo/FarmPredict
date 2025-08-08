@@ -632,6 +632,18 @@ def onionforecast(request):
     }
     return render(request,'main/onionforecast.html',context)
 
+MODEL_ORIGINS = {
+    'access_cm2': '호주', 'access_esm1_5': '호주',
+    'canesm5': '캐나다', 'cnrm_cm6_1': '프랑스',
+    'cnrm_esm2_1': '프랑스', 'ec_earth3': '유럽',
+    'gfdl_esm4': '미국', 'inm_cm4_8': '러시아',
+    'inm_cm5_0': '러시아', 'ipsl_cm6a_lr': '프랑스',
+    'kace_1_0_g': '대한민국', 'miroc6': '일본',
+    'miroc_es2l': '일본', 'mpi_esm1_2_hr': '독일',
+    'mpi_esm1_2_lr': '독일', 'mri_esm2_0': '일본',
+    'noresm2_lm': '노르웨이', 'ukesm1_0_ll': '영국',
+}
+
 def scorepage(request):
     # --- 1. 필터 값 가져오기 (이전과 동일) ---
     selected_model_db = request.GET.get('main_scenario', '')
@@ -661,6 +673,7 @@ def scorepage(request):
     # --- 3. 동적 모델 선택 및 데이터 처리 ---
     TargetModel = MODEL_MAP.get(selected_model_db)
     if TargetModel:
+        context['selected_model_origin'] = MODEL_ORIGINS.get(selected_model_db)
         # --- 3-1. 드롭다운 옵션 생성 (이전과 동일) ---
         base_queryset = TargetModel.objects.all()
         context['sub_scenario_list'] = base_queryset.values_list('sub_scenario', flat=True).distinct()
