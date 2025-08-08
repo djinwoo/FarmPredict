@@ -118,6 +118,34 @@
                 </tr>
             </tbody>
         </table>
+
+    <table class="weatherforecast-table"> {# 기존 CSS를 재사용하기 위해 같은 클래스 이름을 사용합니다. #}
+        <thead>
+            <tr>
+                <th>종류</th>
+                <th>배추</th>
+                <th>양파</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>예측값 (t/ha)</th>
+                <td>{{ prediction_results.cabbage_pred|floatformat:2|default:"-" }}</td>
+                <td>{{ prediction_results.onion_pred|floatformat:2|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>실제값 (t/ha)</th>
+                <td>{{ prediction_results.cabbage_actual|floatformat:2|default:"-" }}</td>
+                <td>{{ prediction_results.onion_actual|floatformat:2|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>오차율 (%)</th>
+                <td>{{ prediction_results.cabbage_error|floatformat:2|default:"-" }}</td>
+                <td>{{ prediction_results.onion_error|floatformat:2|default:"-" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
 <script>
     // 시도/시군구 연동 로직
     const locationData = JSON.parse('{{ location_data_json|escapejs }}');

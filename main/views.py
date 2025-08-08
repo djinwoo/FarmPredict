@@ -374,7 +374,6 @@ def futuredatapage(request):
     
     return render(request, 'main/futuredatapage.html', context)
 
-
 def parse_float_safe(val):
     try:
         return float(val)
@@ -649,7 +648,8 @@ def scorepage(request):
     # --- 2. 컨텍스트 초기화 ---
     context = {
         'results': [],
-        'weather_stats': {}, # 요약 통계를 담을 딕셔너리 초기화
+        'prediction_results': {},
+        'weather_stats': {}, 
         'sub_scenario_list': [],
         'year_list': [],
         'month_list': list(range(1, 13)),
@@ -703,8 +703,6 @@ def scorepage(request):
                     results_queryset = results_queryset.filter(
                         Q(year__lt=int(end_year)) | Q(year=int(end_year), month__lte=int(end_month))
                     )
-
-            # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼ 이 부분이 수정되었습니다 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
             # 필터링된 결과에 대한 평균값 계산
             if results_queryset.exists():
                 stats = results_queryset.aggregate(
@@ -729,7 +727,55 @@ def scorepage(request):
                 
                 # 계산된 통계 딕셔너리를 context에 바로 전달
                 context['weather_stats'] = stats
-            # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+                try:
+                    if nitrogen and str(nitrogen).strip():
+                        N = float(nitrogen)
+                        T = float(stats['avg_temp__avg'])
+                        H = float(stats['humidity__avg'])
+                        W = float(stats['wind_speed__avg'])
+                        S = float(stats['solar_radiation__avg'])
+                        P = float(stats['precipitation__avg'])
+
+                        # 배추 예측
+                        cabbage_pred = round(0.1930*N + 2.6281*T + 2.2951*H - 4.9108*W + 5.4245*S - 2.5028*P - 113.4609, 2)
+                        
+                        # 양파 예측
+                        onion_pred = round(0.1016*N - 0.1009*T - 0.1267*H + 0.0626*W + 0.1437*S - 0.0433*P + 10.4367, 2)
+
+                        # 실제값 조회 (시작 연도 기준)
+                        cabbage_actual = onion_actual = None
+                        # 실제값은 시도와 '종료 연도'가 모두 선택되었을 때만 조회합니다.
+                        if selected_sido and end_year:
+                            # 매핑된 시/도 이름 가져오기
+                            remapped_sido = SIDO_REMAP.get(selected_sido, selected_sido)
+                            
+                            # 배추 실제값 조회
+                            cabbage_qs = models.Cabbage.objects.using('cabbage').filter(region=remapped_sido, year=int(end_year))
+                            if cabbage_qs.exists():
+                                val = cabbage_qs.values_list('yield_per_10a', flat=True).first()
+                                cabbage_actual = round(float(val) / 100, 2) if val is not None else None
+                            
+                            # 양파 실제값 조회
+                            onion_qs = models.Onion.objects.using('onion').filter(region=remapped_sido, year=int(end_year))
+                            if onion_qs.exists():
+                                val = onion_qs.values_list('yield_per_10a', flat=True).first()
+                                onion_actual = round(float(val) / 100, 2) if val is not None else None
+
+                        # 오차율 계산
+                        cabbage_error = round(abs(cabbage_pred - cabbage_actual) / cabbage_actual * 100, 2) if cabbage_pred and cabbage_actual else None
+                        onion_error = round(abs(onion_pred - onion_actual) / onion_actual * 100, 2) if onion_pred and onion_actual else None
+
+                        context['prediction_results'] = {
+                            'cabbage_pred': cabbage_pred,
+                            'onion_pred': onion_pred,
+                            'cabbage_actual': cabbage_actual,
+                            'onion_actual': onion_actual,
+                            'cabbage_error': cabbage_error,
+                            'onion_error': onion_error,
+                        }
+                except (ValueError, TypeError, ZeroDivisionError) as e:
+                    print(f"[예측 오류] {e}")
 
     # --- 4. 템플릿에 전달할 전체 컨텍스트 구성 (이전과 동일) ---
     context['main_scenario_list'] = [(key, key.upper()) for key in MODEL_MAP.keys()]
